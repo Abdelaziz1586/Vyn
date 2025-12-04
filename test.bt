@@ -1,0 +1,11 @@
+task printSquare takes n do
+    cycle i from 1 to n do
+        cycle j from 1 to n do
+            write "* "
+        end
+
+        say ""
+    end
+end
+
+printSquare(10)
