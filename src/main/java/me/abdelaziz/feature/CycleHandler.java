@@ -29,7 +29,6 @@ public final class CycleHandler implements StatementHandler {
         return new CycleStatement(variableName, start, end, parseBody(parser));
     }
 
-    // Helper to avoid repeating body parsing logic
     private List<Statement> parseBody(final Parser parser) {
         parser.consume("do", "Expected 'do'");
         final List<Statement> body = new ArrayList<>();
