@@ -1,36 +1,8 @@
-say "================================="
-say "   ULTIMATE NUMBER GUESSING      "
-say "================================="
+make b false
 
-make target random(1, 100)
-make attempts 0
-make running true
+check b do
+    say "True"
+otherwise
 
-say "I have picked a number between 1 and 100."
-say "Can you guess it?"
-say ""
-
-cycle while running do
-    make inputStr input("Enter your guess: ")
-
-    make guess number(inputStr)
-
-    make attempts attempts + 1
-
-    check guess == target do
-        say ""
-        say "🎉 CORRECT! The number was " + target
-        say "You won in " + attempts + " attempts!"
-        make running false
-    end
-
-    check guess < target do
-        say "Too low! ⬆️  Try going higher."
-    end
-
-    check guess > target do
-        say "Too high! ⬇️  Try going lower."
-    end
+    say "False"
 end
-
-say "Game Over. Thanks for playing!"

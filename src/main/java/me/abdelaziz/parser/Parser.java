@@ -97,13 +97,24 @@ public final class Parser {
     }
 
     private Expression multiplicative() {
-        Expression expr = primary();
+        Expression expr = unary();
         while (match(TokenType.STAR, TokenType.SLASH, TokenType.MOD, TokenType.GT, TokenType.LT, TokenType.EQ)) {
             final String op = previous().text;
-            final Expression right = primary();
+            final Expression right = unary();
             expr = new BinaryExpression(expr, op, right);
         }
+
         return expr;
+    }
+
+    private Expression unary() {
+        if (match(TokenType.BANG, TokenType.MINUS)) {
+            final String operator = previous().text;
+            final Expression right = unary(); // Recursive to allow !!true
+            return new UnaryExpression(operator, right);
+        }
+
+        return primary();
     }
 
     private Expression primary() {
@@ -117,10 +128,12 @@ public final class Parser {
             advance();
             return new LiteralExpression(true);
         }
+
         if (check("false")) {
             advance();
             return new LiteralExpression(false);
         }
+
         if (check("new")) {
             advance();
             final String className = consume(TokenType.IDENTIFIER, "Expected class name").text;

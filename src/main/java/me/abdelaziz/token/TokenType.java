@@ -9,7 +9,7 @@ public enum TokenType {
     IDENTIFIER, NUMBER, STRING,
 
     // Operators
-    PLUS, MINUS, STAR, SLASH, MOD, EQ, GT, LT, DOT,
+    PLUS, MINUS, STAR, SLASH, MOD, EQ, GT, LT, DOT, BANG,
 
     LPAREN, RPAREN, COMMA
 }

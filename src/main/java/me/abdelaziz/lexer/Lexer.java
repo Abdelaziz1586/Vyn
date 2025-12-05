@@ -59,6 +59,15 @@ public final class Lexer {
                     pos++;
                 }
                 break;
+            case '!':
+                if (peek(1) == '=') {
+                    tokens.add(new Token(TokenType.EQ, "!="));
+                    pos += 2;
+                } else {
+                    tokens.add(new Token(TokenType.BANG, "!"));
+                    pos++;
+                }
+                break;
             case '>':
                 tokens.add(new Token(TokenType.GT, ">"));
                 pos++;
@@ -90,7 +99,7 @@ public final class Lexer {
                 pos++;
                 break;
             default:
-                throw new RuntimeException("Unknown character: " + current);
+                throw new RuntimeException("Unknown character at pos " + pos + ": " + current);
         }
     }
 
