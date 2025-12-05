@@ -12,6 +12,7 @@ import java.util.List;
 public final class TaskHandler implements StatementHandler {
 
     @Override
+    @SuppressWarnings("StatementWithEmptyBody")
     public Statement parse(final Parser parser) {
         final String name = parser.consume(TokenType.IDENTIFIER, "Expect task name").text;
         final List<String> params = new ArrayList<>();
@@ -26,8 +27,14 @@ public final class TaskHandler implements StatementHandler {
         parser.consume("do", "Expect 'do'");
 
         final List<Statement> body = new ArrayList<>();
-        while (!parser.check("end") && !parser.check(TokenType.EOF))
+        while (true) {
+            while (parser.match(TokenType.NEWLINE));
+
+            if (parser.check("end") || parser.check(TokenType.EOF))
+                break;
+
             body.add(parser.statement());
+        }
 
         parser.consume("end", "Expect 'end'");
 

@@ -3,7 +3,7 @@ package me.abdelaziz.token;
 public enum TokenType {
 
     // Structural
-    EOF,
+    EOF, NEWLINE,
 
     // Data
     IDENTIFIER, NUMBER, STRING,

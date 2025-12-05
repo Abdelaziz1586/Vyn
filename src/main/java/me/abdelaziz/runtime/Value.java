@@ -33,12 +33,14 @@ public final class Value {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         final Value other = (Value) o;
 
-        if (this.value instanceof Number && other.value instanceof Number)
-            return ((Number) this.value).doubleValue() == ((Number) other.value).doubleValue();
+        if (this.value == null && other.value == null) return true;
+        if (this.value == null || other.value == null) return false;
 
+        if (this.value instanceof Number && other.value instanceof Number) {
+            return ((Number) this.value).doubleValue() == ((Number) other.value).doubleValue();
+        }
         return Objects.equals(this.value, other.value);
     }
 
@@ -52,6 +54,8 @@ public final class Value {
 
     @Override
     public String toString() {
+        if (value == null) return "nothing";
+
         if (value instanceof Number) {
             final double d = ((Number) value).doubleValue();
             if (d == (long) d)

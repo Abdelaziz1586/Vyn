@@ -1,8 +1,8 @@
 package me.abdelaziz.feature;
 
 import me.abdelaziz.api.StatementHandler;
-import me.abdelaziz.ast.Expression;
 import me.abdelaziz.ast.Statement;
+import me.abdelaziz.ast.expression.LiteralExpression;
 import me.abdelaziz.ast.expression.VariableExpression;
 import me.abdelaziz.ast.expression.VarDeclaration;
 import me.abdelaziz.ast.statement.PropertySetStatement;
@@ -18,11 +18,12 @@ public final class MakeHandler implements StatementHandler {
 
         if (parser.match(TokenType.DOT)) {
             final String propName = parser.consume(TokenType.IDENTIFIER, "Expected property name").text;
-            final Expression value = parser.expression();
-            return new PropertySetStatement(new VariableExpression(nameToken.text), propName, value);
+            return new PropertySetStatement(new VariableExpression(nameToken.text), propName, parser.expression());
         }
 
-        final Expression value = parser.expression();
-        return new VarDeclaration(nameToken.text, value, false);
+        if (parser.check(TokenType.NEWLINE) || parser.check(TokenType.EOF))
+            return new VarDeclaration(nameToken.text, new LiteralExpression(null), false);
+
+        return new VarDeclaration(nameToken.text, parser.expression(), false);
     }
 }

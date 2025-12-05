@@ -23,7 +23,10 @@ public final class Lexer {
             if (Character.isDigit(current)) tokens.add(tokenizeNumber());
             else if (Character.isLetter(current)) tokens.add(tokenizeWord());
             else if (current == '"') tokens.add(tokenizeString());
-            else tokenizeOperatorOrWhitespace(tokens, current);
+            else if (current == '\n') {
+                tokens.add(new Token(TokenType.NEWLINE, "\n"));
+                pos++;
+            } else tokenizeOperatorOrWhitespace(tokens, current);
         }
         tokens.add(new Token(TokenType.EOF, ""));
         return tokens;
@@ -82,7 +85,6 @@ public final class Lexer {
                 break;
             case ' ':
             case '\t':
-            case '\n':
             case '\r':
                 pos++;
                 break;

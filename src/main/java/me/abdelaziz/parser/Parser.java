@@ -38,7 +38,10 @@ public final class Parser {
         return statements;
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     public Statement statement() {
+        while (match(TokenType.NEWLINE));
+
         final Token current = peek();
 
         if (current.type == TokenType.IDENTIFIER && handlers.containsKey(current.text)) {
@@ -118,6 +121,11 @@ public final class Parser {
     }
 
     private Expression primary() {
+        if (check("nothing")) {
+            advance();
+            return new LiteralExpression(null);
+        }
+
         if (match(TokenType.NUMBER))
             return new LiteralExpression(Double.parseDouble(previous().text));
 

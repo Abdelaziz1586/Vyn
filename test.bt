@@ -1,8 +1,10 @@
-make b false
-
-check b do
-    say "True"
-otherwise
-
-    say "False"
+blueprint Person do
+    make name
+    make age
 end
+
+make person new Person
+make person.name "Abdelaziz"
+make person.age 18
+
+say person
