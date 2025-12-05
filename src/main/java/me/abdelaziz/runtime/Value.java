@@ -1,5 +1,7 @@
 package me.abdelaziz.runtime;
 
+import java.util.Objects;
+
 public final class Value {
 
     private final Object value;
@@ -25,6 +27,27 @@ public final class Value {
 
     public Boolean asBoolean() {
         return (Boolean) value;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Value other = (Value) o;
+
+        if (this.value instanceof Number && other.value instanceof Number)
+            return ((Number) this.value).doubleValue() == ((Number) other.value).doubleValue();
+
+        return Objects.equals(this.value, other.value);
+    }
+
+    @Override
+    public int hashCode() {
+        if (value instanceof Number)
+            return Objects.hash(((Number) value).doubleValue());
+
+        return Objects.hash(value);
     }
 
     @Override

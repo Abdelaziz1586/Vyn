@@ -1,9 +1,12 @@
-package me.abdelaziz.runtime;
+package me.abdelaziz.runtime.function;
 
 import me.abdelaziz.ast.Statement;
+import me.abdelaziz.runtime.Environment;
+import me.abdelaziz.runtime.Value;
+
 import java.util.List;
 
-public final class BotifyFunction {
+public final class BotifyFunction implements BotifyCallable {
 
     private final List<String> parameters;
     private final List<Statement> body;
@@ -15,7 +18,7 @@ public final class BotifyFunction {
         this.closure = closure;
     }
 
-    public Value call(final List<Value> arguments) {
+    public Value call(final Environment ignoredEnv, final List<Value> arguments) {
         final Environment fnEnv = new Environment(closure);
 
         if (arguments.size() != parameters.size())

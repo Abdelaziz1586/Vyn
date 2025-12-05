@@ -1,4 +1,6 @@
-package me.abdelaziz.runtime;
+package me.abdelaziz.runtime.function;
+
+import me.abdelaziz.runtime.Value;
 
 public final class ReturnException extends RuntimeException {
 

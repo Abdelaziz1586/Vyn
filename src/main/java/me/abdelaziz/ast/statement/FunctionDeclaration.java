@@ -1,7 +1,7 @@
 package me.abdelaziz.ast.statement;
 
 import me.abdelaziz.ast.Statement;
-import me.abdelaziz.runtime.BotifyFunction;
+import me.abdelaziz.runtime.function.BotifyFunction;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 

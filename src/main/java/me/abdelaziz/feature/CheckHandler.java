@@ -18,9 +18,9 @@ public final class CheckHandler implements StatementHandler {
         parser.consume("do", "Expected 'do'");
 
         final List<Statement> body = new ArrayList<>();
-        while (!parser.check("end") && !parser.check(TokenType.EOF)) {
+        while (!parser.check("end") && !parser.check(TokenType.EOF))
             body.add(parser.statement());
-        }
+
         parser.consume("end", "Expected 'end'");
         return new IfStatement(condition, body);
     }

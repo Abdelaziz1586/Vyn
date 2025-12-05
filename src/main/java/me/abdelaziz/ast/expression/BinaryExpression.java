@@ -38,7 +38,7 @@ public final class BinaryExpression implements Expression {
             case "<":
                 return new Value(l.asDouble() < r.asDouble());
             case "==":
-                return new Value(l.asJavaObject().equals(r.asJavaObject()));
+                return new Value(l.equals(r));
             default:
                 throw new RuntimeException("Unknown operator");
         }

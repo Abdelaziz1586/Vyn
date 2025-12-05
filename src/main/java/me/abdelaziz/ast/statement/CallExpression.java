@@ -1,7 +1,7 @@
 package me.abdelaziz.ast.statement;
 
 import me.abdelaziz.ast.Expression;
-import me.abdelaziz.runtime.BotifyFunction;
+import me.abdelaziz.runtime.function.BotifyCallable;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 
@@ -22,14 +22,15 @@ public final class CallExpression implements Expression {
     public Value evaluate(final Environment env) {
         final Value fnValue = callee.evaluate(env);
 
-        if (!(fnValue.asJavaObject() instanceof BotifyFunction))
+        if (!(fnValue.asJavaObject() instanceof BotifyCallable))
             throw new RuntimeException("Can only call functions/tasks.");
 
-        final BotifyFunction function = (BotifyFunction) fnValue.asJavaObject();
+        final BotifyCallable function = (BotifyCallable) fnValue.asJavaObject();
+
         final List<Value> args = new ArrayList<>();
         for (final Expression expr : arguments)
             args.add(expr.evaluate(env));
 
-        return function.call(args);
+        return function.call(env, args);
     }
 }
