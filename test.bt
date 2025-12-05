@@ -1,10 +1,36 @@
-blueprint Person do
-    make name
-    make age
+say "================================="
+say "   ULTIMATE NUMBER GUESSING      "
+say "================================="
+
+make target random(1, 100)
+make attempts 0
+make running true
+
+say "I have picked a number between 1 and 100."
+say "Can you guess it?"
+say ""
+
+cycle while running do
+    make inputStr input("Enter your guess: ")
+
+    make guess number(inputStr)
+
+    make attempts attempts + 1
+
+    check guess == target do
+        say ""
+        say "🎉 CORRECT! The number was " + target
+        say "You won in " + attempts + " attempts!"
+        make running false
+    end
+
+    check guess < target do
+        say "Too low! ⬆️  Try going higher."
+    end
+
+    check guess > target do
+        say "Too high! ⬇️  Try going lower."
+    end
 end
 
-make person new Person
-make person.name "Abdelaziz"
-make person.age 18
-
-say person
+say "Game Over. Thanks for playing!"
