@@ -4,7 +4,6 @@ import me.abdelaziz.ast.Statement;
 import me.abdelaziz.feature.*;
 import me.abdelaziz.lexer.Lexer;
 import me.abdelaziz.runtime.function.nat.*;
-import me.abdelaziz.runtime.Value;
 import me.abdelaziz.token.Token;
 import me.abdelaziz.parser.Parser;
 import me.abdelaziz.runtime.Environment;
@@ -48,20 +47,22 @@ public final class Main {
     }
 
     private static void addSTDs(final Environment globalEnv) {
-        globalEnv.define("input", new Value(new InputNativeFunction()), true);
+        globalEnv.defineFunction("input", new InputNativeFunction());
 
-        globalEnv.define("number", new Value(new NumberNativeFunction()), true);
+        globalEnv.defineFunction("number", new NumberNativeFunction());
 
-        globalEnv.define("time", new Value(new TimeNativeFunction()), true);
+        globalEnv.defineFunction("time", new TimeNativeFunction());
 
-        globalEnv.define("random", new Value(new RandomNativeFunction()), true);
+        globalEnv.defineFunction("random", new RandomNativeFunction());
 
-        globalEnv.define("fetch", new Value(new FetchNativeFunction()), true);
+        globalEnv.defineFunction("fetch", new FetchNativeFunction());
 
-        globalEnv.define("unpack", new Value(new UnpackNativeFunction()), true);
+        globalEnv.defineFunction("unpack", new UnpackNativeFunction());
 
-        globalEnv.define("pack", new Value(new PackNativeFunction()), true);
+        globalEnv.defineFunction("pack", new PackNativeFunction());
 
-        globalEnv.define("at", new Value(new AtNativeFunction()), true);
+        globalEnv.defineFunction("at", new AtNativeFunction());
+
+        globalEnv.defineFunction("size", new SizeNativeFunction());
     }
 }

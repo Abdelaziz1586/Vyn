@@ -43,7 +43,7 @@ public final class Parser {
 
     @SuppressWarnings("StatementWithEmptyBody")
     public Statement statement() {
-        while (match(TokenType.NEWLINE));
+        while (match(TokenType.NEWLINE)) ;
 
         if (check(TokenType.EOF)) return null;
 
@@ -116,13 +116,9 @@ public final class Parser {
     }
 
     private Expression unary() {
-        if (match(TokenType.BANG, TokenType.MINUS)) {
-            final String operator = previous().text;
-            final Expression right = unary();
-            return new UnaryExpression(operator, right);
-        }
-
-        return primary();
+        return match(TokenType.BANG, TokenType.MINUS)
+                ? new UnaryExpression(previous().text, unary())
+                : primary();
     }
 
     private Expression primary() {
@@ -153,6 +149,18 @@ public final class Parser {
             return new NewExpression(className);
         }
 
+        if (match(TokenType.LBRACKET)) {
+            final List<Expression> elements = new ArrayList<>();
+            if (!check(TokenType.RBRACKET)) {
+                do {
+                    elements.add(expression());
+                } while (match(TokenType.COMMA));
+            }
+
+            consume(TokenType.RBRACKET, "Expected ']' after list.");
+            return new ArrayLiteralExpression(elements);
+        }
+
         if (match(TokenType.LPAREN)) {
             final Expression expr = expression();
             consume(TokenType.RPAREN, "Expect ')' after expression.");
@@ -168,6 +176,10 @@ public final class Parser {
                     expr = new GetExpression(expr, prop);
                 } else if (match(TokenType.LPAREN)) {
                     expr = finishCall(expr);
+                } else if (match(TokenType.LBRACKET)) {
+                    final Expression index = expression();
+                    consume(TokenType.RBRACKET, "Expected ']' after index.");
+                    expr = new ArrayAccessExpression(expr, index);
                 } else {
                     break;
                 }

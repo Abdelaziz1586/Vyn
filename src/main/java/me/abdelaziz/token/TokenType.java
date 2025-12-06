@@ -11,5 +11,8 @@ public enum TokenType {
     // Operators
     PLUS, MINUS, STAR, SLASH, MOD, EQ, GT, LT, DOT, BANG,
 
-    LPAREN, RPAREN, COMMA
+    LPAREN, RPAREN, COMMA,
+
+    // Arrays
+    LBRACKET, RBRACKET
 }

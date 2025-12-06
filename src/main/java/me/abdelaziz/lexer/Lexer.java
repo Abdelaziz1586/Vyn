@@ -96,6 +96,14 @@ public final class Lexer {
                 tokens.add(new Token(TokenType.RPAREN, ")"));
                 pos++;
                 break;
+            case '[':
+                tokens.add(new Token(TokenType.LBRACKET, "["));
+                pos++;
+                break;
+            case ']':
+                tokens.add(new Token(TokenType.RBRACKET, "]"));
+                pos++;
+                break;
             case ',':
                 tokens.add(new Token(TokenType.COMMA, ","));
                 pos++;
