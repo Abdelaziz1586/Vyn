@@ -1,45 +1,57 @@
 package me.abdelaziz.runtime;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public final class Value {
 
-    private final Object value;
+    private Object object;
+    private double number;
+    private boolean isNumber;
 
     public Value(final Object value) {
-        this.value = value;
-    }
-
-    public Object asJavaObject() {
-        return value;
-    }
-
-    public int asInt() {
-        if (value instanceof Number)
-            return ((Number) value).intValue();
-
-        try {
-            return Integer.parseInt(value.toString());
-        } catch (final NumberFormatException e) {
-            throw new RuntimeException("Cannot convert '" + value + "' to a number.");
+        if (value instanceof Number) {
+            this.number = ((Number) value).doubleValue();
+            this.isNumber = true;
+            this.object = null;
+        } else {
+            this.object = value;
+            this.isNumber = false;
         }
     }
 
+    public Value(final double value) {
+        this.number = value;
+        this.isNumber = true;
+        this.object = null;
+    }
+
+    public void set(final double value) {
+        this.number = value;
+        this.isNumber = true;
+        this.object = null;
+    }
+
+    public Object asJavaObject() {
+        return isNumber ? number : object;
+    }
+
+    public int asInt() {
+        return isNumber ? (int) number : Integer.parseInt(object.toString());
+    }
+
     public Double asDouble() {
-        if (value instanceof Number)
-            return ((Number) value).doubleValue();
+        if (isNumber) return number;
 
         try {
-            return Double.parseDouble(value.toString());
-        } catch (final NumberFormatException e) {
-            throw new RuntimeException("Cannot convert '" + value + "' to a number.");
+            return Double.parseDouble(object.toString());
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot convert '" + object + "' to a number.");
         }
     }
 
     public Boolean asBoolean() {
-        return (Boolean) value;
+        if (isNumber) return number != 0;
+        return (Boolean) object;
     }
 
     @Override
@@ -48,36 +60,36 @@ public final class Value {
         if (o == null || getClass() != o.getClass()) return false;
         final Value other = (Value) o;
 
-        if (this.value == null && other.value == null) return true;
-        if (this.value == null || other.value == null) return false;
+        if (this.isNumber && other.isNumber)
+            return this.number == other.number;
 
-        if (this.value instanceof Number && other.value instanceof Number) {
-            return ((Number) this.value).doubleValue() == ((Number) other.value).doubleValue();
-        }
-        return Objects.equals(this.value, other.value);
+        final Object v1 = this.isNumber ? this.number : this.object;
+        final Object v2 = other.isNumber ? other.number : other.object;
+
+        if (v1 == null && v2 == null) return true;
+        if (v1 == null || v2 == null) return false;
+
+        return v1.toString().equals(v2.toString());
     }
 
     @Override
     public int hashCode() {
-        if (value instanceof Number)
-            return Objects.hash(((Number) value).doubleValue());
-
-        return Objects.hash(value);
+        return isNumber
+                ? Double.hashCode(number)
+                : Objects.hashCode(object);
     }
 
     @Override
     public String toString() {
-        if (value == null) return "nothing";
+        if (isNumber) {
+            if (number == (long) number)
+                return String.valueOf((long) number);
 
-        if (value instanceof Number) {
-            final double d = ((Number) value).doubleValue();
-            if (d == (long) d)
-                return String.valueOf((long) d);
+            return String.valueOf(number);
         }
 
-        if (value instanceof List || value instanceof Map)
-            return value.toString();
-
-        return String.valueOf(value);
+        return object == null
+                ? "nothing"
+                : object.toString();
     }
 }

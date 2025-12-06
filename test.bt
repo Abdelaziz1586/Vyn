@@ -1,0 +1,8 @@
+make then time()
+
+cycle i from 1 to 1000000 do
+	say i
+end
+
+say time() - then
+

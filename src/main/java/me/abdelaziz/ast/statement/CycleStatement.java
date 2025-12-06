@@ -33,8 +33,11 @@ public final class CycleStatement implements Statement {
     @Override
     public void execute(final Environment env) {
         if (conditionExpr != null) {
-            while (conditionExpr.evaluate(env).asBoolean())
-                executeBody(env);
+            final Environment loopEnv = new Environment(env);
+            while (conditionExpr.evaluate(env).asBoolean()) {
+                for (final Statement stmt : body)
+                    stmt.execute(loopEnv);
+            }
             return;
         }
 
@@ -43,18 +46,17 @@ public final class CycleStatement implements Statement {
         final double start = startExpr.evaluate(env).asDouble();
         final double end = endExpr.evaluate(env).asDouble();
 
+        final Environment loopEnv = new Environment(env);
+
+        final Value iterator = new Value(start);
+
+        loopEnv.define(variableName, iterator, false);
+
         for (double i = start; i <= end; i++) {
-            final Environment loopEnv = new Environment(env);
-            loopEnv.define(variableName, new Value(i), false);
+            iterator.set(i);
 
             for (final Statement stmt : body)
                 stmt.execute(loopEnv);
         }
-    }
-
-    private void executeBody(final Environment parentEnv) {
-        final Environment loopEnv = new Environment(parentEnv);
-        for (final Statement stmt : body)
-            stmt.execute(loopEnv);
     }
 }
