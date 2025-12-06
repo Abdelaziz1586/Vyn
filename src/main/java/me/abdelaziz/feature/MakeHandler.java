@@ -16,10 +16,8 @@ public final class MakeHandler implements StatementHandler {
     public Statement parse(final Parser parser) {
         final Token nameToken = parser.consume(TokenType.IDENTIFIER, "Expected variable name");
 
-        if (parser.match(TokenType.DOT)) {
-            final String propName = parser.consume(TokenType.IDENTIFIER, "Expected property name").text;
-            return new PropertySetStatement(new VariableExpression(nameToken.text), propName, parser.expression());
-        }
+        if (parser.match(TokenType.DOT))
+            return new PropertySetStatement(new VariableExpression(nameToken.text), parser.consume(TokenType.IDENTIFIER, "Expected property name").text, parser.expression());
 
         if (parser.check(TokenType.NEWLINE) || parser.check(TokenType.EOF))
             return new VarDeclaration(nameToken.text, new LiteralExpression(null), false);

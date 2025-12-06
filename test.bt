@@ -10,7 +10,7 @@ blueprint LinkList do
         reply head == nothing
     end
 
-    task insetLast takes value do
+    task insertLast takes value do
         check head == nothing do
             make head new Link
             make head.value value
@@ -69,6 +69,36 @@ blueprint LinkList do
         reply copy
     end
 
+    task removeLast do
+    	check head == nothing do
+       		reply nothing
+       	end
+
+       	make copy head
+       	cycle while copy.next != nothing do
+       		make copy copy.next
+       	end
+
+       	make returned copy.next
+
+       	make copy.next nothing
+
+       	reply returned
+    end
+
+	task size do
+		make size 0
+		make copy head
+
+		cycle while copy != nothing do
+			make size size + 1
+
+			make copy copy.next
+		end
+
+		reply size
+	end
+
     task print do
         write "{"
         make copy head
@@ -103,6 +133,35 @@ blueprint Stack do
     task isEmpty do
     	reply l.isEmpty()
     end
+
+    task size do
+    	reply l.size()
+    end
+end
+
+blueprint Queue do
+	make l new LinkList
+
+	task enqueue takes value do
+		l.insertLast(value)
+	end
+
+	task dequeue do
+		make temp l.removeFirst()
+        check temp == nothing do
+          	reply nothing
+        end
+
+        reply temp.value
+	end
+
+	task isEmpty do
+        reply l.isEmpty()
+    end
+
+	task size do
+	   	reply l.size()
+    end
 end
 
 make s new Stack
@@ -113,3 +172,13 @@ s.push(2)
 say s.pop()
 say s.pop()
 say s.pop()
+
+make q new Queue
+
+q.enqueue(1)
+q.enqueue(2)
+
+say "Size: " + q.size()
+
+say q.dequeue()
+say q.dequeue()

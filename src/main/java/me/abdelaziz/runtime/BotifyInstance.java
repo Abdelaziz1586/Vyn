@@ -1,5 +1,7 @@
 package me.abdelaziz.runtime;
 
+import me.abdelaziz.runtime.function.BotifyCallable;
+
 import java.util.Map;
 
 public final class BotifyInstance {
@@ -12,6 +14,10 @@ public final class BotifyInstance {
 
     public Value get(final String name) {
         return fields.get(name);
+    }
+
+    public BotifyCallable getMethod(final String name) {
+        return fields.getFunction(name);
     }
 
     public void set(final String name, final Value value) {

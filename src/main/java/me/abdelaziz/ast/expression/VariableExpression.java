@@ -12,6 +12,10 @@ public final class VariableExpression implements Expression {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public Value evaluate(final Environment env) {
         return env.get(name);

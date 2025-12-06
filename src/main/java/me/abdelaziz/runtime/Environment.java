@@ -1,5 +1,7 @@
 package me.abdelaziz.runtime;
 
+import me.abdelaziz.runtime.function.BotifyCallable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,16 +9,20 @@ public final class Environment {
 
     private final Environment parent;
     private final Map<String, Value> values;
+    private final Map<String, BotifyCallable> functions;
+
     private final Map<String, Boolean> immutable;
 
     public Environment(final Environment parent) {
         this.parent = parent;
         this.values = new HashMap<>();
+        this.functions = new HashMap<>();
         this.immutable = new HashMap<>();
     }
 
     public void define(final String name, final Value value, final boolean isConstant) {
         if (values.containsKey(name)) throw new RuntimeException("Variable '" + name + "' already defined.");
+
         values.put(name, value);
         immutable.put(name, isConstant);
     }
@@ -50,6 +56,16 @@ public final class Environment {
 
     public Map<String, Value> getVariables() {
         return new HashMap<>(values);
+    }
+
+    public void defineFunction(final String name, final BotifyCallable function) {
+        functions.put(name, function);
+    }
+
+    public BotifyCallable getFunction(final String name) {
+        if (functions.containsKey(name)) return functions.get(name);
+        if (parent != null) return parent.getFunction(name);
+        throw new RuntimeException("Undefined task '" + name + "'");
     }
 
     @Override

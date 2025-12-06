@@ -9,19 +9,27 @@ import java.util.Map;
 
 public final class GetExpression implements Expression {
 
-    private final String name;
     private final Expression object;
+    private final String name;
 
     public GetExpression(final Expression object, final String name) {
         this.object = object;
         this.name = name;
     }
 
+    public Expression getObject() {
+        return object;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public Value evaluate(final Environment env) {
-        final Value obj = object.evaluate(env);
-        final Object raw = obj.asJavaObject();
+        final Value value = object.evaluate(env);
+        final Object raw = value.asJavaObject();
 
         if (raw instanceof BotifyInstance)
             return ((BotifyInstance) raw).get(name);
@@ -29,6 +37,6 @@ public final class GetExpression implements Expression {
         if (raw instanceof Map)
             return ((Map<String, Value>) raw).getOrDefault(name, new Value(null));
 
-        throw new RuntimeException("Cannot access property '" + name + "' on " + obj);
+        throw new RuntimeException("Cannot access property '" + name + "' on " + value);
     }
 }

@@ -1,6 +1,9 @@
 package me.abdelaziz.ast.statement;
 
 import me.abdelaziz.ast.Expression;
+import me.abdelaziz.ast.expression.GetExpression;
+import me.abdelaziz.ast.expression.VariableExpression;
+import me.abdelaziz.runtime.BotifyInstance;
 import me.abdelaziz.runtime.function.BotifyCallable;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
@@ -20,12 +23,21 @@ public final class CallExpression implements Expression {
 
     @Override
     public Value evaluate(final Environment env) {
-        final Value fnValue = callee.evaluate(env);
+        final BotifyCallable function;
 
-        if (!(fnValue.asJavaObject() instanceof BotifyCallable))
-            throw new RuntimeException("Can only call functions/tasks.");
+        if (callee instanceof VariableExpression) {
+            function = env.getFunction(((VariableExpression) callee).getName());
+        } else if (callee instanceof GetExpression) {
+            final GetExpression getExpr = (GetExpression) callee;
+            final Value objectValue = getExpr.getObject().evaluate(env);
 
-        final BotifyCallable function = (BotifyCallable) fnValue.asJavaObject();
+            if (!(objectValue.asJavaObject() instanceof BotifyInstance))
+                throw new RuntimeException("Cannot call method on non-object.");
+
+            function = ((BotifyInstance) objectValue.asJavaObject()).getMethod(getExpr.getName());
+        } else {
+            throw new RuntimeException("Invalid function call target.");
+        }
 
         final List<Value> args = new ArrayList<>();
         for (final Expression expr : arguments)
