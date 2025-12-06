@@ -10,7 +10,7 @@ blueprint LinkList do
         reply head == nothing
     end
 
-    task add takes value do
+    task insetLast takes value do
         check head == nothing do
             make head new Link
             make head.value value
@@ -26,8 +26,47 @@ blueprint LinkList do
         end
     end
 
+    task insertFirst takes value do
+        check head == nothing do
+            make head new Link
+            make head.value value
+        otherwise
+            make newHead new Link
+            make newHead.next head
+            make newHead.value value
+
+            make head newHead
+        end
+    end
+
     task getHead do
         reply head
+    end
+
+    task get takes index do
+        make copy head
+
+        cycle i from 1 to index do
+            check copy == nothing do
+                reply null
+            end
+
+            make copy copy.next
+        end
+
+        reply copy
+    end
+
+    task removeFirst do
+        check head == nothing do
+            reply nothing
+        end
+
+        make copy head
+
+		make head copy.next
+
+        reply copy
     end
 
     task print do
@@ -45,9 +84,32 @@ blueprint LinkList do
     end
 end
 
-make l new LinkList
+blueprint Stack do
+    make l new LinkList
 
-l.add(1)
-l.add(2)
+    task push takes value do
+        l.insertFirst(value)
+    end
 
-l.print()
+    task pop do
+    	make temp l.removeFirst()
+    	check temp == nothing do
+    		reply nothing
+    	end
+
+		reply temp.value
+    end
+
+    task isEmpty do
+    	reply l.isEmpty()
+    end
+end
+
+make s new Stack
+
+s.push(1)
+s.push(2)
+
+say s.pop()
+say s.pop()
+say s.pop()
