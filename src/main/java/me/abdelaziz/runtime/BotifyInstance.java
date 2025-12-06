@@ -1,5 +1,7 @@
 package me.abdelaziz.runtime;
 
+import java.util.Map;
+
 public final class BotifyInstance {
 
     private final Environment fields;
@@ -14,6 +16,10 @@ public final class BotifyInstance {
 
     public void set(final String name, final Value value) {
         fields.assign(name, value);
+    }
+
+    public Map<String, Value> asMap() {
+        return fields.getVariables();
     }
 
     @Override

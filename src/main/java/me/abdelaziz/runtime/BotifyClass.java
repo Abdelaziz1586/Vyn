@@ -1,0 +1,30 @@
+package me.abdelaziz.runtime;
+
+import me.abdelaziz.ast.Statement;
+import java.util.List;
+
+public final class BotifyClass {
+
+    private final String name;
+    private final List<Statement> body;
+    private final Environment closure;
+
+    public BotifyClass(final String name, final List<Statement> body, final Environment closure) {
+        this.name = name;
+        this.body = body;
+        this.closure = closure;
+    }
+
+    public Environment getClosure() {
+        return closure;
+    }
+
+    public List<Statement> getBody() {
+        return body;
+    }
+
+    @Override
+    public String toString() {
+        return "<blueprint " + name + ">";
+    }
+}

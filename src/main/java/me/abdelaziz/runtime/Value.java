@@ -1,5 +1,7 @@
 package me.abdelaziz.runtime;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public final class Value {
@@ -12,6 +14,17 @@ public final class Value {
 
     public Object asJavaObject() {
         return value;
+    }
+
+    public int asInt() {
+        if (value instanceof Number)
+            return ((Number) value).intValue();
+
+        try {
+            return Integer.parseInt(value.toString());
+        } catch (final NumberFormatException e) {
+            throw new RuntimeException("Cannot convert '" + value + "' to a number.");
+        }
     }
 
     public Double asDouble() {
@@ -61,6 +74,9 @@ public final class Value {
             if (d == (long) d)
                 return String.valueOf((long) d);
         }
+
+        if (value instanceof List || value instanceof Map)
+            return value.toString();
 
         return String.valueOf(value);
     }

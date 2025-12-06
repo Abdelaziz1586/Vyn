@@ -5,6 +5,8 @@ import me.abdelaziz.runtime.BotifyInstance;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 
+import java.util.Map;
+
 public final class GetExpression implements Expression {
 
     private final String name;
@@ -16,11 +18,17 @@ public final class GetExpression implements Expression {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Value evaluate(final Environment env) {
         final Value obj = object.evaluate(env);
-        if (obj.asJavaObject() instanceof BotifyInstance)
-            return ((BotifyInstance) obj.asJavaObject()).get(name);
+        final Object raw = obj.asJavaObject();
 
-        throw new RuntimeException("Only instances have properties.");
+        if (raw instanceof BotifyInstance)
+            return ((BotifyInstance) raw).get(name);
+
+        if (raw instanceof Map)
+            return ((Map<String, Value>) raw).getOrDefault(name, new Value(null));
+
+        throw new RuntimeException("Cannot access property '" + name + "' on " + obj);
     }
 }

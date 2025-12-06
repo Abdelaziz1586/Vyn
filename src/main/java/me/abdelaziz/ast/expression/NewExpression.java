@@ -2,10 +2,10 @@ package me.abdelaziz.ast.expression;
 
 import me.abdelaziz.ast.Expression;
 import me.abdelaziz.ast.Statement;
+import me.abdelaziz.runtime.BotifyClass;
 import me.abdelaziz.runtime.BotifyInstance;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
-import java.util.List;
 
 public final class NewExpression implements Expression {
 
@@ -17,12 +17,17 @@ public final class NewExpression implements Expression {
 
     @Override
     public Value evaluate(final Environment env) {
-        final Value classDef = env.get(className);
+        final Value classVal = env.get(className);
 
-        @SuppressWarnings("unchecked") final List<Statement> body = (List<Statement>) classDef.asJavaObject();
+        if (!(classVal.asJavaObject() instanceof BotifyClass))
+            throw new RuntimeException(className + " is not a blueprint.");
 
-        final Environment instanceEnv = new Environment(env);
-        for (final Statement stmt : body) stmt.execute(instanceEnv);
+        final BotifyClass botifyClass = (BotifyClass) classVal.asJavaObject();
+        final Environment instanceEnv = new Environment(botifyClass.getClosure());
+
+        for (final Statement stmt : botifyClass.getBody())
+            stmt.execute(instanceEnv);
+
         return new Value(new BotifyInstance(instanceEnv));
     }
 }

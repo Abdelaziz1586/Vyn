@@ -48,6 +48,10 @@ public final class Environment {
         return false;
     }
 
+    public Map<String, Value> getVariables() {
+        return new HashMap<>(values);
+    }
+
     @Override
     public String toString() {
         return values.toString();

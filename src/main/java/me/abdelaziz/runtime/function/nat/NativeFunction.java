@@ -1,12 +1,13 @@
-package me.abdelaziz.runtime.function;
+package me.abdelaziz.runtime.function.nat;
 
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
+import me.abdelaziz.runtime.function.BotifyCallable;
 
 import java.util.List;
 import java.util.function.BiFunction;
 
-public final class NativeFunction implements BotifyCallable {
+public class NativeFunction implements BotifyCallable {
 
     private final BiFunction<Environment, List<Value>, Value> logic;
 
