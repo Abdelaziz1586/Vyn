@@ -1,0 +1,112 @@
+use "link.bt"
+
+blueprint LinkList do
+    make head
+
+    task isEmpty do
+        reply head == nothing
+    end
+
+    task insertLast takes value do
+        check head == nothing do
+            make head new Link
+            make head.value value
+        otherwise
+            make copy head
+            cycle while copy.next != nothing do
+                make copy copy.next
+            end
+
+            make copy.next new Link
+            make copy copy.next
+            make copy.value value
+        end
+    end
+
+    task insertFirst takes value do
+        check head == nothing do
+            make head new Link
+            make head.value value
+        otherwise
+            make newHead new Link
+            make newHead.next head
+            make newHead.value value
+
+            make head newHead
+        end
+    end
+
+    task getHead do
+        reply head
+    end
+
+    task get takes index do
+        make copy head
+
+        cycle i from 1 to index do
+            check copy == nothing do
+                reply null
+            end
+
+            make copy copy.next
+        end
+
+        reply copy
+    end
+
+    task removeFirst do
+        check head == nothing do
+            reply nothing
+        end
+
+        make copy head
+
+		make head copy.next
+
+        reply copy
+    end
+
+    task removeLast do
+    	check head == nothing do
+       		reply nothing
+       	end
+
+       	make copy head
+       	cycle while copy.next != nothing do
+       		make copy copy.next
+       	end
+
+       	make returned copy.next
+
+       	make copy.next nothing
+
+       	reply returned
+    end
+
+	task size do
+		make size 0
+		make copy head
+
+		cycle while copy != nothing do
+			make size size + 1
+
+			make copy copy.next
+		end
+
+		reply size
+	end
+
+    task print do
+        write "{"
+        make copy head
+        cycle while copy != nothing do
+            write copy.value
+            check copy.next != nothing do
+                write ", "
+            end
+            make copy copy.next
+        end
+
+        write "}"
+    end
+end

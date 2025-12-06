@@ -1,0 +1,26 @@
+use "linklist.bt"
+
+blueprint Stack do
+    make l new LinkList
+
+    task push takes value do
+        l.insertFirst(value)
+    end
+
+    task pop do
+    	make temp l.removeFirst()
+    	check temp == nothing do
+    		reply nothing
+    	end
+
+		reply temp.value
+    end
+
+    task isEmpty do
+    	reply l.isEmpty()
+    end
+
+    task size do
+    	reply l.size()
+    end
+end
