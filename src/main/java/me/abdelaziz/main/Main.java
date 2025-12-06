@@ -64,5 +64,7 @@ public final class Main {
         globalEnv.defineFunction("at", new AtNativeFunction());
 
         globalEnv.defineFunction("size", new SizeNativeFunction());
+
+        globalEnv.defineFunction("sort", new SortNativeFunction());
     }
 }

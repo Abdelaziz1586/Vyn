@@ -1,0 +1,9 @@
+say "--- Sorting Lists ---"
+make nums [10, 2, 50, 5]
+sort(nums)
+say nums
+~ Output: [2.0, 5.0, 10.0, 50.0]
+
+say "--- Sorting Strings ---"
+make word "zebra"
+say sort(word)

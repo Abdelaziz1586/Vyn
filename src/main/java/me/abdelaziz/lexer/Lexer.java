@@ -135,10 +135,46 @@ public final class Lexer {
     private Token tokenizeString() {
         pos++;
         final StringBuilder sb = new StringBuilder();
-        while (pos < input.length() && peek(0) != '"') {
-            sb.append(peek(0));
-            pos++;
+
+        while (pos < input.length()) {
+            final char current = peek(0);
+
+            if (current == '\\') {
+                pos++;
+                if (pos >= input.length()) break;
+
+                final char escaped = peek(0);
+                switch (escaped) {
+                    case 'n':
+                        sb.append('\n');
+                        break;
+                    case 't':
+                        sb.append('\t');
+                        break;
+                    case 'r':
+                        sb.append('\r');
+                        break;
+                    case '"':
+                        sb.append('"');
+                        break;
+                    case '\\':
+                        sb.append('\\');
+                        break;
+                    default:
+                        sb.append('\\');
+                        sb.append(escaped);
+                        break;
+                }
+
+                pos++;
+            } else if (current == '"') {
+                break;
+            } else {
+                sb.append(current);
+                pos++;
+            }
         }
+
         pos++;
         return new Token(TokenType.STRING, sb.toString());
     }
