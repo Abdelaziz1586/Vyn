@@ -24,6 +24,9 @@ public final class Main {
         Parser.register("task", new TaskHandler());
         Parser.register("reply", new ReplyHandler());
         Parser.register("use", new UseHandler());
+        Parser.register("attempt", new AttemptHandler());
+        Parser.register("escape", new EscapeHandler());
+        Parser.register("skip", new SkipHandler());
 
         final Environment globalEnv = new Environment(null);
         addSTDs(globalEnv);

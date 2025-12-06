@@ -4,6 +4,8 @@ import me.abdelaziz.ast.Expression;
 import me.abdelaziz.ast.Statement;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
+import me.abdelaziz.runtime.function.exception.BreakException;
+import me.abdelaziz.runtime.function.exception.ContinueException;
 
 import java.util.List;
 
@@ -35,8 +37,13 @@ public final class CycleStatement implements Statement {
         if (conditionExpr != null) {
             final Environment loopEnv = new Environment(env);
             while (conditionExpr.evaluate(env).asBoolean()) {
-                for (final Statement stmt : body)
-                    stmt.execute(loopEnv);
+                try {
+                    for (final Statement stmt : body)
+                        stmt.execute(loopEnv);
+                } catch (final ContinueException ignored) {
+                } catch (final BreakException ignored) {
+                    break;
+                }
             }
             return;
         }
@@ -55,8 +62,13 @@ public final class CycleStatement implements Statement {
         for (double i = start; i <= end; i++) {
             iterator.set(i);
 
-            for (final Statement stmt : body)
-                stmt.execute(loopEnv);
+            try {
+                for (final Statement stmt : body)
+                    stmt.execute(loopEnv);
+            } catch (final ContinueException ignored) {
+            } catch (final BreakException ignored) {
+                break;
+            }
         }
     }
 }

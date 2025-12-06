@@ -3,7 +3,7 @@ package me.abdelaziz.ast.statement;
 import me.abdelaziz.ast.Expression;
 import me.abdelaziz.ast.Statement;
 import me.abdelaziz.runtime.Environment;
-import me.abdelaziz.runtime.function.ReturnException;
+import me.abdelaziz.runtime.function.exception.ReturnException;
 import me.abdelaziz.runtime.Value;
 
 public final class ReturnStatement implements Statement {

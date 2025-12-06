@@ -1,4 +1,4 @@
-package me.abdelaziz.runtime.function;
+package me.abdelaziz.runtime.function.exception;
 
 import me.abdelaziz.runtime.Value;
 
