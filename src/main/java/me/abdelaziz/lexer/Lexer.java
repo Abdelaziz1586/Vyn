@@ -100,6 +100,15 @@ public final class Lexer {
                 tokens.add(new Token(TokenType.COMMA, ","));
                 pos++;
                 break;
+            case '\n':
+                tokens.add(new Token(TokenType.NEWLINE, "\n"));
+                pos++;
+                break;
+            case '~':
+                while (peek(0) != '\n' && peek(0) != '\0')
+                    pos++;
+
+                break;
             default:
                 throw new RuntimeException("Unknown character at pos " + pos + ": " + current);
         }

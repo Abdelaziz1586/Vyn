@@ -33,14 +33,19 @@ public final class Parser {
     public List<Statement> parse() {
         final List<Statement> statements = new ArrayList<>();
         while (!match(TokenType.EOF)) {
-            statements.add(statement());
+            final Statement stmt = statement();
+            if (stmt != null)
+                statements.add(stmt);
         }
+
         return statements;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     public Statement statement() {
         while (match(TokenType.NEWLINE));
+
+        if (check(TokenType.EOF)) return null;
 
         final Token current = peek();
 
@@ -113,7 +118,7 @@ public final class Parser {
     private Expression unary() {
         if (match(TokenType.BANG, TokenType.MINUS)) {
             final String operator = previous().text;
-            final Expression right = unary(); // Recursive to allow !!true
+            final Expression right = unary();
             return new UnaryExpression(operator, right);
         }
 
