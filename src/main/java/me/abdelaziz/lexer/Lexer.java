@@ -21,7 +21,7 @@ public final class Lexer {
         while (pos < input.length()) {
             final char current = peek(0);
             if (Character.isDigit(current)) tokens.add(tokenizeNumber());
-            else if (Character.isLetter(current)) tokens.add(tokenizeWord());
+            else if (Character.isLetter(current) || current == '_') tokens.add(tokenizeWord());
             else if (current == '"') tokens.add(tokenizeString());
             else if (current == '\n') {
                 tokens.add(new Token(TokenType.NEWLINE, "\n"));
@@ -181,7 +181,7 @@ public final class Lexer {
 
     private Token tokenizeWord() {
         final StringBuilder sb = new StringBuilder();
-        while (pos < input.length() && Character.isLetterOrDigit(peek(0))) {
+        while (pos < input.length() && (Character.isLetterOrDigit(peek(0)) || peek(0) == '_')) {
             sb.append(peek(0));
             pos++;
         }

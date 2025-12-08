@@ -3,7 +3,6 @@ package me.abdelaziz.ast.expression;
 import me.abdelaziz.ast.Expression;
 import me.abdelaziz.ast.Statement;
 import me.abdelaziz.runtime.Environment;
-import me.abdelaziz.runtime.Value;
 
 public final class VarDeclaration implements Statement {
 
@@ -19,13 +18,6 @@ public final class VarDeclaration implements Statement {
 
     @Override
     public void execute(final Environment env) {
-        final Value value = initializer.evaluate(env);
-
-        if (!isConstant && env.has(name)) {
-            env.assign(name, value);
-            return;
-        }
-
-        env.define(name, value, isConstant);
+        env.defineOrAssign(name, initializer.evaluate(env), isConstant);
     }
 }

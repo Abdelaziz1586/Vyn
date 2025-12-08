@@ -9,15 +9,17 @@ import java.util.List;
 public final class ClassDeclaration implements Statement {
 
     private final String name;
+    private final String parentName;
     private final List<Statement> body;
 
-    public ClassDeclaration(final String name, final List<Statement> body) {
+    public ClassDeclaration(final String name, final String parentName, final List<Statement> body) {
         this.name = name;
+        this.parentName = parentName;
         this.body = body;
     }
 
     @Override
     public void execute(final Environment env) {
-        env.define(name, new Value(new BotifyClass(name, body, env)), true);
+        env.define(name, new Value(new BotifyClass(name, parentName, body, env)), true);
     }
 }

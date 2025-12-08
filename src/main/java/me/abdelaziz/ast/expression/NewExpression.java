@@ -23,11 +23,24 @@ public final class NewExpression implements Expression {
             throw new RuntimeException(className + " is not a blueprint.");
 
         final BotifyClass botifyClass = (BotifyClass) classVal.asJavaObject();
+
         final Environment instanceEnv = new Environment(botifyClass.getClosure());
 
-        for (final Statement stmt : botifyClass.getBody())
-            stmt.execute(instanceEnv);
+        construct(botifyClass, instanceEnv, env);
 
         return new Value(new BotifyInstance(instanceEnv));
+    }
+
+    private void construct(final BotifyClass currentClass, final Environment instanceEnv, final Environment lookupEnv) {
+        if (currentClass.getParentName() != null) {
+            final Value parentVal = lookupEnv.get(currentClass.getParentName());
+            if (!(parentVal.asJavaObject() instanceof BotifyClass))
+                throw new RuntimeException("Parent class '" + currentClass.getParentName() + "' not found or invalid.");
+
+            construct((BotifyClass) parentVal.asJavaObject(), instanceEnv, lookupEnv);
+        }
+
+        for (final Statement stmt : currentClass.getBody())
+            stmt.execute(instanceEnv);
     }
 }

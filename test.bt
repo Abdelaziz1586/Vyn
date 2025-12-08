@@ -1,8 +1,17 @@
-make then time()
-
-cycle i from 1 to 1000000 do
-	say i
+blueprint Shape do
+    task area do
+        reply 0
+    end
 end
 
-say time() - then
+blueprint Square mimics Shape do
+    make side = 0
+    
+    task init takes s do
+        make side s
+    end
+end
 
+make s = new Square
+s.init(5)
+say s.area()

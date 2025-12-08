@@ -27,6 +27,31 @@ public final class Environment {
         immutable.put(name, isConstant);
     }
 
+    public void defineOrAssign(final String name, final Value value, final boolean isConstant) {
+        if (isConstant) {
+            define(name, value, true);
+            return;
+        }
+
+        if (update(name, value)) return;
+
+        define(name, value, false);
+    }
+
+    private boolean update(final String name, final Value value) {
+        if (values != null && values.containsKey(name)) {
+            if (immutable != null && Boolean.TRUE.equals(immutable.get(name)))
+                throw new RuntimeException("Cannot reassign constant '" + name + "'");
+
+            values.put(name, value);
+            return true;
+        }
+
+        if (parent != null) return parent.update(name, value);
+
+        return false;
+    }
+
     public void assign(final String name, final Value value) {
         if (values != null && values.containsKey(name)) {
             if (immutable != null && Boolean.TRUE.equals(immutable.get(name)))
@@ -45,13 +70,6 @@ public final class Environment {
         if (parent != null) return parent.get(name);
 
         throw new RuntimeException("Undefined variable '" + name + "'");
-    }
-
-    public boolean has(final String name) {
-        if (values != null && values.containsKey(name)) return true;
-        if (parent != null) return parent.has(name);
-
-        return false;
     }
 
     public Map<String, Value> getVariables() {

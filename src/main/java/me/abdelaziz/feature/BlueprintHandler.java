@@ -15,6 +15,13 @@ public final class BlueprintHandler implements StatementHandler {
     @SuppressWarnings("StatementWithEmptyBody")
     public Statement parse(final Parser parser) {
         final String name = parser.consume(TokenType.IDENTIFIER, "Expected class name").text;
+
+        String parentName = null;
+        if (parser.check("mimics")) {
+            parser.consume("mimics", "Expected 'mimics'");
+            parentName = parser.consume(TokenType.IDENTIFIER, "Expected parent class name").text;
+        }
+
         parser.consume("do", "Expected 'do'");
 
         final List<Statement> body = new ArrayList<>();
@@ -28,6 +35,6 @@ public final class BlueprintHandler implements StatementHandler {
         }
 
         parser.consume("end", "Expected 'end'");
-        return new ClassDeclaration(name, body);
+        return new ClassDeclaration(name, parentName, body);
     }
 }

@@ -10,7 +10,7 @@ public final class RandomNativeFunction extends NativeFunction {
                 case 0:
                     return new Value(Math.random());
                 case 1:
-                    return new Value((int) (Math.random() * (args.get(0).asDouble().intValue() + 1)));
+                    return new Value((int) (Math.random() * (args.get(0).asDouble() + 1)));
                 case 2:
                     final int min = args.get(0).asDouble().intValue(),
                             max = args.get(1).asDouble().intValue();

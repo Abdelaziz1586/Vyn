@@ -6,13 +6,19 @@ import java.util.List;
 public final class BotifyClass {
 
     private final String name;
-    private final List<Statement> body;
+    private final String parentName;
     private final Environment closure;
+    private final List<Statement> body;
 
-    public BotifyClass(final String name, final List<Statement> body, final Environment closure) {
+    public BotifyClass(final String name, final String parentName, final List<Statement> body, final Environment closure) {
         this.name = name;
+        this.parentName = parentName;
         this.body = body;
         this.closure = closure;
+    }
+
+    public String getParentName() {
+        return parentName;
     }
 
     public Environment getClosure() {
