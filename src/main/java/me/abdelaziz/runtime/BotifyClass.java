@@ -7,8 +7,8 @@ public final class BotifyClass {
 
     private final String name;
     private final String parentName;
-    private final Environment closure;
     private final List<Statement> body;
+    private final Environment closure;
 
     public BotifyClass(final String name, final String parentName, final List<Statement> body, final Environment closure) {
         this.name = name;

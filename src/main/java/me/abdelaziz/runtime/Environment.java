@@ -72,6 +72,15 @@ public final class Environment {
         throw new RuntimeException("Undefined variable '" + name + "'");
     }
 
+    public boolean has(final String name) {
+        if (values != null && values.containsKey(name)) return true;
+        if (functions != null && functions.containsKey(name)) return true;
+
+        if (parent != null) return parent.has(name);
+
+        return false;
+    }
+
     public Map<String, Value> getVariables() {
         return values != null ? new HashMap<>(values) : new HashMap<>();
     }

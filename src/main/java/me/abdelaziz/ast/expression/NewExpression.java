@@ -7,12 +7,17 @@ import me.abdelaziz.runtime.BotifyInstance;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class NewExpression implements Expression {
 
     private final String className;
+    private final List<Expression> arguments;
 
-    public NewExpression(final String className) {
+    public NewExpression(final String className, final List<Expression> arguments) {
         this.className = className;
+        this.arguments = arguments;
     }
 
     @Override
@@ -26,16 +31,31 @@ public final class NewExpression implements Expression {
 
         final Environment instanceEnv = new Environment(botifyClass.getClosure());
 
+        final BotifyInstance instance = new BotifyInstance(instanceEnv);
+
+        instanceEnv.define("me", new Value(instance), true);
         construct(botifyClass, instanceEnv, env);
 
-        return new Value(new BotifyInstance(instanceEnv));
+        final List<Value> args = new ArrayList<>();
+        for (final Expression expr : arguments)
+            args.add(expr.evaluate(env));
+
+        final String ctorName = "_init_" + args.size();
+
+        if (instanceEnv.has(ctorName)) {
+            instanceEnv.getFunction(ctorName).call(instanceEnv, args);
+        } else if (!args.isEmpty()) {
+            throw new RuntimeException("No constructor found for " + className + " with " + args.size() + " arguments.");
+        }
+
+        return new Value(instance);
     }
 
     private void construct(final BotifyClass currentClass, final Environment instanceEnv, final Environment lookupEnv) {
         if (currentClass.getParentName() != null) {
             final Value parentVal = lookupEnv.get(currentClass.getParentName());
             if (!(parentVal.asJavaObject() instanceof BotifyClass))
-                throw new RuntimeException("Parent class '" + currentClass.getParentName() + "' not found or invalid.");
+                throw new RuntimeException("Parent class '" + currentClass.getParentName() + "' not found.");
 
             construct((BotifyClass) parentVal.asJavaObject(), instanceEnv, lookupEnv);
         }

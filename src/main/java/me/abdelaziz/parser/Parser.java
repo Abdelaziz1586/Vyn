@@ -146,7 +146,18 @@ public final class Parser {
         if (check("new")) {
             advance();
             final String className = consume(TokenType.IDENTIFIER, "Expected class name").text;
-            return new NewExpression(className);
+
+            final List<Expression> args = new ArrayList<>();
+            if (match(TokenType.LPAREN)) {
+                if (!check(TokenType.RPAREN)) {
+                    do {
+                        args.add(expression());
+                    } while (match(TokenType.COMMA));
+                }
+                consume(TokenType.RPAREN, "Expected ')' after constructor arguments.");
+            }
+
+            return new NewExpression(className, args);
         }
 
         if (match(TokenType.LBRACKET)) {

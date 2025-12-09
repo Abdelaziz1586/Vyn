@@ -1,17 +1,14 @@
-blueprint Shape do
-    task area do
-        reply 0
-    end
+blueprint User do
+    make name = "Unknown"
+    make age = 0
+
+	build do
+		make name nothing
+		make age 0
+	end
 end
 
-blueprint Square mimics Shape do
-    make side = 0
-    
-    task init takes s do
-        make side s
-    end
-end
+~ Usage with arguments
+make u new User
 
-make s = new Square
-s.init(5)
-say s.area()
+say pack(u)

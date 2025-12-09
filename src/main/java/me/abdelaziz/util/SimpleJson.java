@@ -9,7 +9,13 @@ public final class SimpleJson {
     public static String pack(final Object obj) {
         if (obj == null) return "null";
         if (obj instanceof Value) return pack(((Value) obj).asJavaObject());
-        if (obj instanceof BotifyInstance) return pack(((BotifyInstance) obj).asMap());
+
+        if (obj instanceof BotifyInstance) {
+            final Map<String, Value> map = ((BotifyInstance) obj).asMap();
+            map.values().removeIf(v -> v.asJavaObject() == obj);
+            return pack(map);
+        }
+
         if (obj instanceof String) return "\"" + obj + "\"";
 
         if (obj instanceof Map) {

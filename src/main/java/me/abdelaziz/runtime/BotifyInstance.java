@@ -30,6 +30,27 @@ public final class BotifyInstance {
 
     @Override
     public String toString() {
-        return fields.toString();
+        final Map<String, Value> vars = fields.getVariables();
+        final StringBuilder sb = new StringBuilder("{");
+        int i = 0;
+
+        for (final Map.Entry<String, Value> entry : vars.entrySet()) {
+            if (i > 0) sb.append(", ");
+
+            sb.append(entry.getKey()).append("=");
+
+            final Value val = entry.getValue();
+
+            if (val.asJavaObject() == this) {
+                sb.append("<me>");
+            } else {
+                sb.append(val);
+            }
+
+            i++;
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
 }

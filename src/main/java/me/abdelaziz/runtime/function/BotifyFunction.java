@@ -19,6 +19,7 @@ public final class BotifyFunction implements BotifyCallable {
         this.closure = closure;
     }
 
+    @Override
     public Value call(final Environment ignoredEnv, final List<Value> arguments) {
         final Environment fnEnv = new Environment(closure);
 
