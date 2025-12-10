@@ -1,4 +1,0 @@
-blueprint Link do
-	make next
-	make value
-end
