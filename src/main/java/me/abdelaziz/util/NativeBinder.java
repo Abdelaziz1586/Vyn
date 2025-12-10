@@ -59,7 +59,6 @@ public final class NativeBinder {
                             throw new RuntimeException("Destructor Error: " + e.getMessage());
                         }
                     }));
-                    continue;
                 }
 
                 if (method.isAnnotationPresent(BotifyFunc.class)) {

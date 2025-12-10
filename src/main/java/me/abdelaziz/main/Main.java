@@ -29,9 +29,10 @@ public final class Main {
         Parser.register("attempt", new AttemptHandler());
         Parser.register("escape", new EscapeHandler());
         Parser.register("skip", new SkipHandler());
+        Parser.register("hold", new HoldHandler());
+        Parser.register("split", new SplitHandler());
         Parser.register("build", new BuildHandler());
         Parser.register("demolish", new DemolishHandler());
-
 
         final Environment globalEnv = new Environment(null);
         addSTDs(globalEnv);

@@ -64,7 +64,6 @@ public abstract class LibraryBase implements BotifyLibrary {
                             throw new RuntimeException("Destructor Error: " + getErrorMsg(e));
                         }
                     }));
-                    continue;
                 }
 
                 if (method.isAnnotationPresent(BotifyFunc.class)) {
