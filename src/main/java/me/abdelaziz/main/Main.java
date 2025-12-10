@@ -14,6 +14,8 @@ public final class Main {
             return;
         }
 
+        Runtime.getRuntime().addShutdownHook(new Thread(Importer::unloadAll));
+
         Parser.register("make", new MakeHandler());
         Parser.register("lock", new LockHandler());
         Parser.register("say", new OutputHandler(true));
@@ -28,6 +30,8 @@ public final class Main {
         Parser.register("escape", new EscapeHandler());
         Parser.register("skip", new SkipHandler());
         Parser.register("build", new BuildHandler());
+        Parser.register("demolish", new DemolishHandler());
+
 
         final Environment globalEnv = new Environment(null);
         addSTDs(globalEnv);
@@ -46,5 +50,6 @@ public final class Main {
         globalEnv.defineFunction("at", new AtNativeFunction());
         globalEnv.defineFunction("size", new SizeNativeFunction());
         globalEnv.defineFunction("sort", new SortNativeFunction());
+        globalEnv.defineFunction("discard", new DiscardNativeFunction());
     }
 }

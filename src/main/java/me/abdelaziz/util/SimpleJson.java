@@ -12,7 +12,11 @@ public final class SimpleJson {
 
         if (obj instanceof BotifyInstance) {
             final Map<String, Value> map = ((BotifyInstance) obj).asMap();
+
             map.values().removeIf(v -> v.asJavaObject() == obj);
+
+            map.keySet().removeIf(k -> k.startsWith("__"));
+
             return pack(map);
         }
 
@@ -24,8 +28,12 @@ public final class SimpleJson {
             int i = 0;
 
             for (final Map.Entry<?, ?> entry : map.entrySet()) {
+                final Object key = entry.getKey();
+
+                if (key.toString().startsWith("__")) continue;
+
                 if (i++ > 0) sb.append(", ");
-                sb.append(pack(entry.getKey())).append(": ").append(pack(entry.getValue()));
+                sb.append(pack(key)).append(": ").append(pack(entry.getValue()));
             }
 
             return sb.append("}").toString();

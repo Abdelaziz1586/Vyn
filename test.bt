@@ -1,14 +1,22 @@
-blueprint User do
-    make name = "Unknown"
-    make age = 0
+blueprint DatabaseConnection do
+    
+    make connectionUrl "..."
+    
+    build takes url do
+        make connectionUrl url
+        say "Connecting to " + connectionUrl
+    end
 
-	build do
-		make name nothing
-		make age 0
-	end
+    ~ The new destructor syntax
+    demolish do
+        say "Closing connection to " + connectionUrl
+        ~ cleanup code here
+    end
 end
 
-~ Usage with arguments
-make u new User
+make db new DatabaseConnection("localhost:3306")
 
-say pack(u)
+~ ... use db ...
+
+~ Explicitly triggers 'demolish' block
+discard(db)

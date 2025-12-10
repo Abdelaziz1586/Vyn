@@ -16,6 +16,10 @@ public final class BotifyInstance {
         return fields.get(name);
     }
 
+    public boolean has(final String name) {
+        return fields.has(name);
+    }
+
     public BotifyCallable getMethod(final String name) {
         return fields.getFunction(name);
     }
@@ -35,17 +39,19 @@ public final class BotifyInstance {
         int i = 0;
 
         for (final Map.Entry<String, Value> entry : vars.entrySet()) {
-            if (i > 0) sb.append(", ");
+            if (entry.getKey().startsWith("__")) continue;
 
+            if (i > 0) sb.append(", ");
             sb.append(entry.getKey()).append("=");
 
             final Value val = entry.getValue();
 
-            if (val.asJavaObject() == this) {
-                sb.append("<me>");
-            } else {
-                sb.append(val);
-            }
+            sb.append(
+                    val.asJavaObject() == this
+                            ? "<me>"
+                            : val
+
+            );
 
             i++;
         }
