@@ -15,19 +15,31 @@ public final class ArrayAccessExpression implements Expression {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Value evaluate(final Environment env) {
         final Value objVal = object.evaluate(env),
                 idxVal = index.evaluate(env);
 
-        if (!(objVal.asJavaObject() instanceof List))
-            throw new RuntimeException("Cannot access index of non-list.");
+        if (objVal.asJavaObject() instanceof List)
+            return getIndexFromList((List<Value>) objVal.asJavaObject(), idxVal.asInt());
 
-        @SuppressWarnings("unchecked") final List<Value> list = (List<Value>) objVal.asJavaObject();
-        final int i = idxVal.asInt();
+        if (objVal.asJavaObject() instanceof String)
+            return getIndexFromString((String) objVal.asJavaObject(), idxVal.asInt());
 
+        throw new RuntimeException("Cannot access index of non-list or non-string.");
+    }
+
+    private Value getIndexFromList(final List<Value> list, final int i) {
         if (i < 0 || i >= list.size())
             throw new RuntimeException("Index out of bounds: " + i);
 
         return list.get(i);
+    }
+
+    private Value getIndexFromString(final String s, final int i) {
+        if (i < 0 || i >= s.length())
+            throw new RuntimeException("Index out of bounds: " + i);
+
+        return new Value(String.valueOf(s.charAt(i)));
     }
 }
