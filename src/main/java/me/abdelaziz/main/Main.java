@@ -3,7 +3,15 @@ package me.abdelaziz.main;
 import me.abdelaziz.feature.*;
 import me.abdelaziz.parser.Parser;
 import me.abdelaziz.runtime.Environment;
-import me.abdelaziz.runtime.function.nat.*;
+import me.abdelaziz.runtime.function.nat.conversion.StringNativeFunction;
+import me.abdelaziz.runtime.function.nat.net.AtNativeFunction;
+import me.abdelaziz.runtime.function.nat.net.FetchNativeFunction;
+import me.abdelaziz.runtime.function.nat.net.PackNativeFunction;
+import me.abdelaziz.runtime.function.nat.net.UnpackNativeFunction;
+import me.abdelaziz.runtime.function.nat.conversion.IntegerNativeFunction;
+import me.abdelaziz.runtime.function.nat.conversion.NumberNativeFunction;
+import me.abdelaziz.runtime.function.nat.system.RandomNativeFunction;
+import me.abdelaziz.runtime.function.nat.system.*;
 import me.abdelaziz.util.Importer;
 
 public final class Main {
@@ -41,16 +49,20 @@ public final class Main {
     }
 
     private static void addSTDs(final Environment globalEnv) {
-        globalEnv.defineFunction("input", new InputNativeFunction());
-        globalEnv.defineFunction("number", new NumberNativeFunction());
+        globalEnv.defineFunction("sort", new SortNativeFunction());
         globalEnv.defineFunction("time", new TimeNativeFunction());
+        globalEnv.defineFunction("size", new SizeNativeFunction());
+        globalEnv.defineFunction("input", new InputNativeFunction());
         globalEnv.defineFunction("random", new RandomNativeFunction());
+        globalEnv.defineFunction("discard", new DiscardNativeFunction());
+
+        globalEnv.defineFunction("int", new IntegerNativeFunction());
+        globalEnv.defineFunction("number", new NumberNativeFunction());        globalEnv.defineFunction("number", new NumberNativeFunction());
+        globalEnv.defineFunction("string", new StringNativeFunction());
+
+        globalEnv.defineFunction("at", new AtNativeFunction());
+        globalEnv.defineFunction("pack", new PackNativeFunction());
         globalEnv.defineFunction("fetch", new FetchNativeFunction());
         globalEnv.defineFunction("unpack", new UnpackNativeFunction());
-        globalEnv.defineFunction("pack", new PackNativeFunction());
-        globalEnv.defineFunction("at", new AtNativeFunction());
-        globalEnv.defineFunction("size", new SizeNativeFunction());
-        globalEnv.defineFunction("sort", new SortNativeFunction());
-        globalEnv.defineFunction("discard", new DiscardNativeFunction());
     }
 }

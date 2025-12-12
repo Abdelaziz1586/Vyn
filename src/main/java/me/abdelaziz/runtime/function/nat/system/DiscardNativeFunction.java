@@ -1,7 +1,8 @@
-package me.abdelaziz.runtime.function.nat;
+package me.abdelaziz.runtime.function.nat.system;
 
 import me.abdelaziz.runtime.BotifyInstance;
 import me.abdelaziz.runtime.Value;
+import me.abdelaziz.runtime.function.nat.NativeFunction;
 
 import java.util.Collections;
 

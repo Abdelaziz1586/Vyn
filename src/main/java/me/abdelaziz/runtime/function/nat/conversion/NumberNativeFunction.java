@@ -1,6 +1,7 @@
-package me.abdelaziz.runtime.function.nat;
+package me.abdelaziz.runtime.function.nat.conversion;
 
 import me.abdelaziz.runtime.Value;
+import me.abdelaziz.runtime.function.nat.NativeFunction;
 
 public final class NumberNativeFunction extends NativeFunction {
 

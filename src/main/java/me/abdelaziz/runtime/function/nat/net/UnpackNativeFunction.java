@@ -1,5 +1,6 @@
-package me.abdelaziz.runtime.function.nat;
+package me.abdelaziz.runtime.function.nat.net;
 
+import me.abdelaziz.runtime.function.nat.NativeFunction;
 import me.abdelaziz.util.SimpleJson;
 
 public final class UnpackNativeFunction extends NativeFunction {
