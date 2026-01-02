@@ -6,6 +6,7 @@ import me.abdelaziz.api.annotation.BotifyFunc;
 import me.abdelaziz.api.annotation.BotifyType;
 import me.abdelaziz.ast.Statement;
 import me.abdelaziz.runtime.BotifyClass;
+import me.abdelaziz.runtime.BotifyInstance;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 import me.abdelaziz.runtime.function.nat.NativeFunction;
@@ -18,6 +19,38 @@ import java.util.List;
 
 public final class NativeBinder {
 
+    public static void defineVariable(final Environment env, final String name, final Object javaInstance) {
+        env.define(name, toValue(env, javaInstance), false);
+    }
+
+    public static void defineConstant(final Environment env, final String name, final Object javaInstance) {
+        env.define(name, toValue(env, javaInstance), true);
+    }
+
+    public static Value toValue(final Environment env, final Object javaInstance) {
+        if (javaInstance == null)
+            return new Value(null);
+        if (javaInstance instanceof Value)
+            return (Value) javaInstance;
+
+        final Class<?> javaClass = javaInstance.getClass();
+        if (javaClass.isAnnotationPresent(BotifyType.class)) {
+            final BotifyType typeAnno = javaClass.getAnnotation(BotifyType.class);
+            final String className = typeAnno.name();
+
+            if (!env.has(className)) {
+                bind(env, javaClass);
+            }
+
+            final Value classVal = env.get(className);
+            if (classVal.asJavaObject() instanceof BotifyClass) {
+                return new Value(BotifyInstance.fromHost((BotifyClass) classVal.asJavaObject(), javaInstance));
+            }
+        }
+
+        return new Value(javaInstance);
+    }
+
     public static void bind(final Environment env, final Class<?> javaClass) {
         if (!javaClass.isAnnotationPresent(BotifyType.class))
             throw new RuntimeException("Class " + javaClass.getName() + " missing @BotifyType.");
@@ -28,6 +61,7 @@ public final class NativeBinder {
 
         final Statement classBody = (instanceEnv) -> {
             for (final Constructor<?> ctor : javaClass.getConstructors()) {
+
                 if (ctor.isAnnotationPresent(BotifyConstructor.class)) {
                     final String initName = "_init_" + ctor.getParameterCount();
                     instanceEnv.defineFunction(initName, new NativeFunction((callerEnv, args) -> {
@@ -48,7 +82,8 @@ public final class NativeBinder {
             for (final Method method : javaClass.getMethods()) {
                 if (method.isAnnotationPresent(BotifyDestructor.class)) {
                     instanceEnv.defineFunction("_destroy", new NativeFunction((callerEnv, args) -> {
-                        if (!instanceEnv.has("__host__")) return new Value(null);
+                        if (!instanceEnv.has("__host__"))
+                            return new Value(null);
                         final Object javaHost = instanceEnv.get("__host__").asJavaObject();
                         try {
                             method.invoke(javaHost);
@@ -82,12 +117,14 @@ public final class NativeBinder {
             }
         };
 
-        env.define(className, new Value(new BotifyClass(className, parentName, Collections.singletonList(classBody), env)), true);
+        env.define(className,
+                new Value(new BotifyClass(className, parentName, Collections.singletonList(classBody), env)), true);
     }
 
     private static RuntimeException unwrap(final InvocationTargetException e) {
         final Throwable cause = e.getCause();
-        if (cause instanceof RuntimeException) return (RuntimeException) cause;
+        if (cause instanceof RuntimeException)
+            return (RuntimeException) cause;
         return new RuntimeException(cause != null ? cause.getMessage() : "Unknown Native Error");
     }
 
@@ -101,16 +138,22 @@ public final class NativeBinder {
     }
 
     private static Object convert(final Value val, final Class<?> target) {
-        if (target == String.class) return val.toString();
-        if (target == int.class || target == Integer.class) return val.asInt();
-        if (target == double.class || target == Double.class) return val.asDouble();
-        if (target == boolean.class || target == Boolean.class) return val.asBoolean();
+        if (target == String.class)
+            return val.toString();
+        if (target == int.class || target == Integer.class)
+            return val.asInt();
+        if (target == double.class || target == Double.class)
+            return val.asDouble();
+        if (target == boolean.class || target == Boolean.class)
+            return val.asBoolean();
         return val.asJavaObject();
     }
 
     private static Value toValue(final Object obj) {
-        if (obj == null) return new Value(null);
-        if (obj instanceof Value) return (Value) obj;
+        if (obj == null)
+            return new Value(null);
+        if (obj instanceof Value)
+            return (Value) obj;
         return new Value(obj);
     }
 }

@@ -12,6 +12,19 @@ public final class BotifyInstance {
         this.fields = classScope;
     }
 
+    public static BotifyInstance fromHost(final BotifyClass botifyClass, final Object host) {
+        final Environment instanceEnv = new Environment(botifyClass.getClosure());
+        final BotifyInstance instance = new BotifyInstance(instanceEnv);
+
+        instanceEnv.define("me", new Value(instance), true);
+        instanceEnv.define("__host__", new Value(host), true);
+
+        for (final me.abdelaziz.ast.Statement stmt : botifyClass.getBody())
+            stmt.execute(instanceEnv);
+
+        return instance;
+    }
+
     public Value get(final String name) {
         return fields.get(name);
     }
@@ -39,9 +52,11 @@ public final class BotifyInstance {
         int i = 0;
 
         for (final Map.Entry<String, Value> entry : vars.entrySet()) {
-            if (entry.getKey().startsWith("__")) continue;
+            if (entry.getKey().startsWith("__"))
+                continue;
 
-            if (i > 0) sb.append(", ");
+            if (i > 0)
+                sb.append(", ");
             sb.append(entry.getKey()).append("=");
 
             final Value val = entry.getValue();

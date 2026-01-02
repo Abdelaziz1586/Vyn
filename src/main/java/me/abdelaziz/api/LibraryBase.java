@@ -9,6 +9,7 @@ import me.abdelaziz.runtime.BotifyClass;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 import me.abdelaziz.runtime.function.nat.NativeFunction;
+import me.abdelaziz.util.NativeBinder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -21,10 +22,20 @@ import java.util.function.BiFunction;
 public abstract class LibraryBase implements BotifyLibrary {
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+    }
 
-    protected void bind(final Environment env, final String name, final BiFunction<Environment, List<Value>, Value> logic) {
+    protected void bind(final Environment env, final String name,
+            final BiFunction<Environment, List<Value>, Value> logic) {
         env.defineFunction(name, new NativeFunction(logic));
+    }
+
+    protected void defineVariable(final Environment env, final String name, final Object javaInstance) {
+        NativeBinder.defineVariable(env, name, javaInstance);
+    }
+
+    protected void defineConstant(final Environment env, final String name, final Object javaInstance) {
+        NativeBinder.defineConstant(env, name, javaInstance);
     }
 
     protected void registerClass(final Environment env, final Class<?> javaClass) {
@@ -43,7 +54,8 @@ public abstract class LibraryBase implements BotifyLibrary {
 
                     instanceEnv.defineFunction(initName, new NativeFunction((callerEnv, args) -> {
                         try {
-                            instanceEnv.define("__host__", new Value(ctor.newInstance(convertArgs(args, ctor.getParameterTypes()))), true);
+                            instanceEnv.define("__host__",
+                                    new Value(ctor.newInstance(convertArgs(args, ctor.getParameterTypes()))), true);
                             return new Value(null);
                         } catch (final Exception e) {
                             throw new RuntimeException("Error in native constructor: " + getErrorMsg(e));
@@ -55,7 +67,8 @@ public abstract class LibraryBase implements BotifyLibrary {
             for (final Method method : javaClass.getMethods()) {
                 if (method.isAnnotationPresent(BotifyDestructor.class)) {
                     instanceEnv.defineFunction("_destroy", new NativeFunction((callerEnv, args) -> {
-                        if (!instanceEnv.has("__host__")) return new Value(null);
+                        if (!instanceEnv.has("__host__"))
+                            return new Value(null);
                         final Object javaHost = instanceEnv.get("__host__").asJavaObject();
                         try {
                             method.invoke(javaHost);
@@ -85,7 +98,8 @@ public abstract class LibraryBase implements BotifyLibrary {
             }
         };
 
-        env.define(className, new Value(new BotifyClass(className, parentName, Collections.singletonList(classBody), env)), true);
+        env.define(className,
+                new Value(new BotifyClass(className, parentName, Collections.singletonList(classBody), env)), true);
     }
 
     private String getErrorMsg(final Exception e) {
@@ -108,17 +122,23 @@ public abstract class LibraryBase implements BotifyLibrary {
     }
 
     private Object convert(final Value val, final Class<?> target) {
-        if (target == String.class) return val.toString();
-        if (target == int.class || target == Integer.class) return val.asInt();
-        if (target == double.class || target == Double.class) return val.asDouble();
-        if (target == boolean.class || target == Boolean.class) return val.asBoolean();
+        if (target == String.class)
+            return val.toString();
+        if (target == int.class || target == Integer.class)
+            return val.asInt();
+        if (target == double.class || target == Double.class)
+            return val.asDouble();
+        if (target == boolean.class || target == Boolean.class)
+            return val.asBoolean();
 
         return val.asJavaObject();
     }
 
     private Value toValue(final Object obj) {
-        if (obj == null) return new Value(null);
-        if (obj instanceof Value) return (Value) obj;
+        if (obj == null)
+            return new Value(null);
+        if (obj instanceof Value)
+            return (Value) obj;
         return new Value(obj);
     }
 }

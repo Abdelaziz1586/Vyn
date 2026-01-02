@@ -41,6 +41,7 @@ public final class Importer {
                     loadedFiles.add(className);
                     return;
                 }
+
                 throw new RuntimeException("Class " + className + " invalid library type.");
             }
 

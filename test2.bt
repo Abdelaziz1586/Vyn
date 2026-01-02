@@ -1,24 +1,3 @@
-use "linklist.bt"
+use "java:me.abdelaziz.BotifyInteractiveStuff"
 
-blueprint Integer do
-	make size 0
-	make numbers new LinkList
-
-	build takes i do
-        make lastValue i
-
-        cycle while lastValue != 0 do
-        	make size size + 1
-
-        	numbers.insertFirst(lastValue % 10)
-
-        	make lastValue int(lastValue / 10)
-        end
-    end
-end
-
-make i 1234
-
-make integer new Integer(i)
-
-integer.numbers.print()
+say visualStack.getMaterial()

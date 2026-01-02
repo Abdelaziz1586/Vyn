@@ -57,7 +57,8 @@ public final class Main {
         globalEnv.defineFunction("discard", new DiscardNativeFunction());
 
         globalEnv.defineFunction("int", new IntegerNativeFunction());
-        globalEnv.defineFunction("number", new NumberNativeFunction());        globalEnv.defineFunction("number", new NumberNativeFunction());
+        globalEnv.defineFunction("number", new NumberNativeFunction());
+        globalEnv.defineFunction("number", new NumberNativeFunction());
         globalEnv.defineFunction("string", new StringNativeFunction());
 
         globalEnv.defineFunction("at", new AtNativeFunction());
