@@ -20,13 +20,17 @@ public final class Lexer {
         final List<Token> tokens = new ArrayList<>();
         while (pos < input.length()) {
             final char current = peek(0);
-            if (Character.isDigit(current)) tokens.add(tokenizeNumber());
-            else if (Character.isLetter(current) || current == '_') tokens.add(tokenizeWord());
-            else if (current == '"') tokens.add(tokenizeString());
+            if (Character.isDigit(current))
+                tokens.add(tokenizeNumber());
+            else if (Character.isLetter(current) || current == '_')
+                tokens.add(tokenizeWord());
+            else if (current == '"')
+                tokens.add(tokenizeString());
             else if (current == '\n') {
                 tokens.add(new Token(TokenType.NEWLINE, "\n"));
                 pos++;
-            } else tokenizeOperatorOrWhitespace(tokens, current);
+            } else
+                tokenizeOperatorOrWhitespace(tokens, current);
         }
         tokens.add(new Token(TokenType.EOF, ""));
         return tokens;
@@ -82,6 +86,22 @@ public final class Lexer {
             case '.':
                 tokens.add(new Token(TokenType.DOT, "."));
                 pos++;
+                break;
+            case '&':
+                if (peek(1) == '&') {
+                    tokens.add(new Token(TokenType.AND, "&&"));
+                    pos += 2;
+                } else {
+                    throw new RuntimeException("Unexpected character '&' at pos " + pos);
+                }
+                break;
+            case '|':
+                if (peek(1) == '|') {
+                    tokens.add(new Token(TokenType.OR, "||"));
+                    pos += 2;
+                } else {
+                    throw new RuntimeException("Unexpected character '|' at pos " + pos);
+                }
                 break;
             case ' ':
             case '\t':
@@ -141,7 +161,8 @@ public final class Lexer {
 
             if (current == '\\') {
                 pos++;
-                if (pos >= input.length()) break;
+                if (pos >= input.length())
+                    break;
 
                 final char escaped = peek(0);
                 switch (escaped) {
@@ -190,7 +211,8 @@ public final class Lexer {
     }
 
     private char peek(final int offset) {
-        if (pos + offset >= input.length()) return '\0';
+        if (pos + offset >= input.length())
+            return '\0';
 
         return input.charAt(pos + offset);
     }

@@ -43,9 +43,11 @@ public final class Parser {
 
     @SuppressWarnings("StatementWithEmptyBody")
     public Statement statement() {
-        while (match(TokenType.NEWLINE)) ;
+        while (match(TokenType.NEWLINE))
+            ;
 
-        if (check(TokenType.EOF)) return null;
+        if (check(TokenType.EOF))
+            return null;
 
         final Token current = peek();
 
@@ -58,11 +60,32 @@ public final class Parser {
     }
 
     public Expression expression() {
-        return additive();
+        return logicalOr();
+    }
+
+    private Expression logicalOr() {
+        Expression expr = logicalAnd();
+        while (match(TokenType.OR)) {
+            final String op = previous().text;
+            final Expression right = logicalAnd();
+            expr = new LogicalExpression(expr, op, right);
+        }
+        return expr;
+    }
+
+    private Expression logicalAnd() {
+        Expression expr = additive();
+        while (match(TokenType.AND)) {
+            final String op = previous().text;
+            final Expression right = additive();
+            expr = new LogicalExpression(expr, op, right);
+        }
+        return expr;
     }
 
     public Token consume(final TokenType type, final String err) {
-        if (check(type)) return advance();
+        if (check(type))
+            return advance();
         throw new RuntimeException(err);
     }
 
@@ -75,7 +98,8 @@ public final class Parser {
     }
 
     public boolean check(final String text) {
-        if (pos >= tokens.size()) return false;
+        if (pos >= tokens.size())
+            return false;
         return tokens.get(pos).text.equals(text);
     }
 
@@ -90,7 +114,8 @@ public final class Parser {
     }
 
     public boolean check(final TokenType type) {
-        if (pos >= tokens.size()) return false;
+        if (pos >= tokens.size())
+            return false;
         return tokens.get(pos).type == type;
     }
 
@@ -214,7 +239,8 @@ public final class Parser {
     }
 
     private Token advance() {
-        if (pos < tokens.size()) pos++;
+        if (pos < tokens.size())
+            pos++;
         return tokens.get(pos - 1);
     }
 
