@@ -7,13 +7,13 @@ import me.abdelaziz.runtime.function.exception.ReturnException;
 
 import java.util.List;
 
-public final class BotifyFunction implements BotifyCallable {
+public final class VynFunction implements VynCallable {
 
     private final List<String> parameters;
     private final List<Statement> body;
     private final Environment closure;
 
-    public BotifyFunction(final List<String> parameters, final List<Statement> body, final Environment closure) {
+    public VynFunction(final List<String> parameters, final List<Statement> body, final Environment closure) {
         this.parameters = parameters;
         this.body = body;
         this.closure = closure;

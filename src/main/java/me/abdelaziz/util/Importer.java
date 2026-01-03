@@ -1,7 +1,7 @@
 package me.abdelaziz.util;
 
-import me.abdelaziz.api.BotifyLibrary;
-import me.abdelaziz.api.annotation.BotifyType;
+import me.abdelaziz.api.VynLibrary;
+import me.abdelaziz.api.annotation.VynType;
 import me.abdelaziz.ast.Statement;
 import me.abdelaziz.lexer.Lexer;
 import me.abdelaziz.parser.Parser;
@@ -16,7 +16,7 @@ import java.util.*;
 public final class Importer {
 
     private static final Set<String> loadedFiles = new HashSet<>();
-    private static final List<BotifyLibrary> loadedLibraries = new ArrayList<>();
+    private static final List<VynLibrary> loadedLibraries = new ArrayList<>();
     private static ClassLoader libraryLoader;
 
     public static void load(final String path, final Environment env) {
@@ -28,14 +28,14 @@ public final class Importer {
                 if (libraryLoader == null) initLibraryLoader();
                 final Class<?> clazz = Class.forName(className, true, libraryLoader);
 
-                if (clazz.isAnnotationPresent(BotifyType.class)) {
+                if (clazz.isAnnotationPresent(VynType.class)) {
                     NativeBinder.bind(env, clazz);
                     loadedFiles.add(className);
                     return;
                 }
 
-                if (BotifyLibrary.class.isAssignableFrom(clazz)) {
-                    final BotifyLibrary lib = (BotifyLibrary) clazz.getDeclaredConstructor().newInstance();
+                if (VynLibrary.class.isAssignableFrom(clazz)) {
+                    final VynLibrary lib = (VynLibrary) clazz.getDeclaredConstructor().newInstance();
                     lib.onEnable(env);
                     loadedLibraries.add(lib);
                     loadedFiles.add(className);
@@ -65,7 +65,7 @@ public final class Importer {
     }
 
     public static void unloadAll() {
-        for (final BotifyLibrary lib : loadedLibraries) {
+        for (final VynLibrary lib : loadedLibraries) {
             try {
                 lib.onDisable();
             } catch (final Exception e) {

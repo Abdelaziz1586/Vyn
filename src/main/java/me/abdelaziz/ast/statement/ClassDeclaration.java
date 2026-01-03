@@ -1,7 +1,7 @@
 package me.abdelaziz.ast.statement;
 
 import me.abdelaziz.ast.Statement;
-import me.abdelaziz.runtime.BotifyClass;
+import me.abdelaziz.runtime.VynClass;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 import java.util.List;
@@ -20,6 +20,6 @@ public final class ClassDeclaration implements Statement {
 
     @Override
     public void execute(final Environment env) {
-        env.define(name, new Value(new BotifyClass(name, parentName, body, env)), true);
+        env.define(name, new Value(new VynClass(name, parentName, body, env)), true);
     }
 }

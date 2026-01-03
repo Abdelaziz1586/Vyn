@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface BotifyType {
+public @interface VynType {
     String name();
     String mimics() default "";
 }

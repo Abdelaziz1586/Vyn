@@ -1,6 +1,6 @@
 package me.abdelaziz.runtime.function.nat.system;
 
-import me.abdelaziz.runtime.BotifyInstance;
+import me.abdelaziz.runtime.VynInstance;
 import me.abdelaziz.runtime.Value;
 import me.abdelaziz.runtime.function.nat.NativeFunction;
 
@@ -13,8 +13,8 @@ public final class DiscardNativeFunction extends NativeFunction {
             if (args.isEmpty()) return new Value(null);
 
             final Object obj = args.get(0).asJavaObject();
-            if (obj instanceof BotifyInstance) {
-                final BotifyInstance inst = (BotifyInstance) obj;
+            if (obj instanceof VynInstance) {
+                final VynInstance inst = (VynInstance) obj;
 
                 if (inst.has("_destroy"))
                     inst.getMethod("_destroy").call(env, Collections.emptyList());

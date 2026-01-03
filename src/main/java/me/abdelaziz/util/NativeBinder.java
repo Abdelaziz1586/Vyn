@@ -1,12 +1,12 @@
 package me.abdelaziz.util;
 
-import me.abdelaziz.api.annotation.BotifyConstructor;
-import me.abdelaziz.api.annotation.BotifyDestructor;
-import me.abdelaziz.api.annotation.BotifyFunc;
-import me.abdelaziz.api.annotation.BotifyType;
+import me.abdelaziz.api.annotation.VynConstructor;
+import me.abdelaziz.api.annotation.VynDestructor;
+import me.abdelaziz.api.annotation.VynFunc;
+import me.abdelaziz.api.annotation.VynType;
 import me.abdelaziz.ast.Statement;
-import me.abdelaziz.runtime.BotifyClass;
-import me.abdelaziz.runtime.BotifyInstance;
+import me.abdelaziz.runtime.VynClass;
+import me.abdelaziz.runtime.VynInstance;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 import me.abdelaziz.runtime.function.nat.NativeFunction;
@@ -34,8 +34,8 @@ public final class NativeBinder {
             return (Value) javaInstance;
 
         final Class<?> javaClass = javaInstance.getClass();
-        if (javaClass.isAnnotationPresent(BotifyType.class)) {
-            final BotifyType typeAnno = javaClass.getAnnotation(BotifyType.class);
+        if (javaClass.isAnnotationPresent(VynType.class)) {
+            final VynType typeAnno = javaClass.getAnnotation(VynType.class);
             final String className = typeAnno.name();
 
             if (!env.has(className)) {
@@ -43,8 +43,8 @@ public final class NativeBinder {
             }
 
             final Value classVal = env.get(className);
-            if (classVal.asJavaObject() instanceof BotifyClass) {
-                return new Value(BotifyInstance.fromHost((BotifyClass) classVal.asJavaObject(), javaInstance));
+            if (classVal.asJavaObject() instanceof VynClass) {
+                return new Value(VynInstance.fromHost((VynClass) classVal.asJavaObject(), javaInstance));
             }
         }
 
@@ -52,17 +52,17 @@ public final class NativeBinder {
     }
 
     public static void bind(final Environment env, final Class<?> javaClass) {
-        if (!javaClass.isAnnotationPresent(BotifyType.class))
-            throw new RuntimeException("Class " + javaClass.getName() + " missing @BotifyType.");
+        if (!javaClass.isAnnotationPresent(VynType.class))
+            throw new RuntimeException("Class " + javaClass.getName() + " missing @VynType.");
 
-        final BotifyType typeAnno = javaClass.getAnnotation(BotifyType.class);
+        final VynType typeAnno = javaClass.getAnnotation(VynType.class);
         final String className = typeAnno.name();
         final String parentName = typeAnno.mimics().isEmpty() ? null : typeAnno.mimics();
 
         final Statement classBody = (instanceEnv) -> {
             for (final Constructor<?> ctor : javaClass.getConstructors()) {
 
-                if (ctor.isAnnotationPresent(BotifyConstructor.class)) {
+                if (ctor.isAnnotationPresent(VynConstructor.class)) {
                     final String initName = "_init_" + ctor.getParameterCount();
                     instanceEnv.defineFunction(initName, new NativeFunction((callerEnv, args) -> {
                         try {
@@ -80,7 +80,7 @@ public final class NativeBinder {
             }
 
             for (final Method method : javaClass.getMethods()) {
-                if (method.isAnnotationPresent(BotifyDestructor.class)) {
+                if (method.isAnnotationPresent(VynDestructor.class)) {
                     instanceEnv.defineFunction("_destroy", new NativeFunction((callerEnv, args) -> {
                         if (!instanceEnv.has("__host__"))
                             return new Value(null);
@@ -96,8 +96,8 @@ public final class NativeBinder {
                     }));
                 }
 
-                if (method.isAnnotationPresent(BotifyFunc.class)) {
-                    final BotifyFunc funcAnno = method.getAnnotation(BotifyFunc.class);
+                if (method.isAnnotationPresent(VynFunc.class)) {
+                    final VynFunc funcAnno = method.getAnnotation(VynFunc.class);
                     final String funcName = funcAnno.name().isEmpty() ? method.getName() : funcAnno.name();
                     instanceEnv.defineFunction(funcName, new NativeFunction((callerEnv, args) -> {
                         if (!instanceEnv.has("__host__"))
@@ -118,7 +118,7 @@ public final class NativeBinder {
         };
 
         env.define(className,
-                new Value(new BotifyClass(className, parentName, Collections.singletonList(classBody), env)), true);
+                new Value(new VynClass(className, parentName, Collections.singletonList(classBody), env)), true);
     }
 
     private static RuntimeException unwrap(final InvocationTargetException e) {

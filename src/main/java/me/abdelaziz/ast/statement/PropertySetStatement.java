@@ -2,7 +2,7 @@ package me.abdelaziz.ast.statement;
 
 import me.abdelaziz.ast.Expression;
 import me.abdelaziz.ast.Statement;
-import me.abdelaziz.runtime.BotifyInstance;
+import me.abdelaziz.runtime.VynInstance;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 
@@ -18,9 +18,9 @@ public final class PropertySetStatement implements Statement {
     @Override
     public void execute(final Environment env) {
         final Value objVal = object.evaluate(env);
-        if (!(objVal.asJavaObject() instanceof BotifyInstance))
+        if (!(objVal.asJavaObject() instanceof VynInstance))
             throw new RuntimeException("Cannot set property on a non-object.");
 
-        ((BotifyInstance) objVal.asJavaObject()).set(propertyName, value.evaluate(env));
+        ((VynInstance) objVal.asJavaObject()).set(propertyName, value.evaluate(env));
     }
 }

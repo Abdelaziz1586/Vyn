@@ -1,25 +1,25 @@
 package me.abdelaziz.runtime;
 
-import me.abdelaziz.runtime.function.BotifyCallable;
+import me.abdelaziz.runtime.function.VynCallable;
 
 import java.util.Map;
 
-public final class BotifyInstance {
+public final class VynInstance {
 
     private final Environment fields;
 
-    public BotifyInstance(final Environment classScope) {
+    public VynInstance(final Environment classScope) {
         this.fields = classScope;
     }
 
-    public static BotifyInstance fromHost(final BotifyClass botifyClass, final Object host) {
-        final Environment instanceEnv = new Environment(botifyClass.getClosure());
-        final BotifyInstance instance = new BotifyInstance(instanceEnv);
+    public static VynInstance fromHost(final VynClass vynClass, final Object host) {
+        final Environment instanceEnv = new Environment(vynClass.getClosure());
+        final VynInstance instance = new VynInstance(instanceEnv);
 
         instanceEnv.define("me", new Value(instance), true);
         instanceEnv.define("__host__", new Value(host), true);
 
-        for (final me.abdelaziz.ast.Statement stmt : botifyClass.getBody())
+        for (final me.abdelaziz.ast.Statement stmt : vynClass.getBody())
             stmt.execute(instanceEnv);
 
         return instance;
@@ -33,7 +33,7 @@ public final class BotifyInstance {
         return fields.has(name);
     }
 
-    public BotifyCallable getMethod(final String name) {
+    public VynCallable getMethod(final String name) {
         return fields.getFunction(name);
     }
 

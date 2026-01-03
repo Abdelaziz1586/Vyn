@@ -1,7 +1,7 @@
 package me.abdelaziz.ast.expression;
 
 import me.abdelaziz.ast.Expression;
-import me.abdelaziz.runtime.BotifyInstance;
+import me.abdelaziz.runtime.VynInstance;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 
@@ -31,8 +31,8 @@ public final class GetExpression implements Expression {
         final Value value = object.evaluate(env);
         final Object raw = value.asJavaObject();
 
-        if (raw instanceof BotifyInstance)
-            return ((BotifyInstance) raw).get(name);
+        if (raw instanceof VynInstance)
+            return ((VynInstance) raw).get(name);
 
         if (raw instanceof Map)
             return ((Map<String, Value>) raw).getOrDefault(name, new Value(null));

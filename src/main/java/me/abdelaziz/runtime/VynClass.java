@@ -3,14 +3,14 @@ package me.abdelaziz.runtime;
 import me.abdelaziz.ast.Statement;
 import java.util.List;
 
-public final class BotifyClass {
+public final class VynClass {
 
     private final String name;
     private final String parentName;
     private final List<Statement> body;
     private final Environment closure;
 
-    public BotifyClass(final String name, final String parentName, final List<Statement> body, final Environment closure) {
+    public VynClass(final String name, final String parentName, final List<Statement> body, final Environment closure) {
         this.name = name;
         this.parentName = parentName;
         this.body = body;

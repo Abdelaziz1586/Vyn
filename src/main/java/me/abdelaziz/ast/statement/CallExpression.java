@@ -3,8 +3,8 @@ package me.abdelaziz.ast.statement;
 import me.abdelaziz.ast.Expression;
 import me.abdelaziz.ast.expression.GetExpression;
 import me.abdelaziz.ast.expression.VariableExpression;
-import me.abdelaziz.runtime.BotifyInstance;
-import me.abdelaziz.runtime.function.BotifyCallable;
+import me.abdelaziz.runtime.VynInstance;
+import me.abdelaziz.runtime.function.VynCallable;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 
@@ -23,7 +23,7 @@ public final class CallExpression implements Expression {
 
     @Override
     public Value evaluate(final Environment env) {
-        final BotifyCallable function;
+        final VynCallable function;
 
         if (callee instanceof VariableExpression) {
             function = env.getFunction(((VariableExpression) callee).getName());
@@ -31,10 +31,10 @@ public final class CallExpression implements Expression {
             final GetExpression getExpr = (GetExpression) callee;
             final Value objectValue = getExpr.getObject().evaluate(env);
 
-            if (!(objectValue.asJavaObject() instanceof BotifyInstance))
+            if (!(objectValue.asJavaObject() instanceof VynInstance))
                 throw new RuntimeException("Cannot call method on non-object.");
 
-            function = ((BotifyInstance) objectValue.asJavaObject()).getMethod(getExpr.getName());
+            function = ((VynInstance) objectValue.asJavaObject()).getMethod(getExpr.getName());
         } else {
             throw new RuntimeException("Invalid function call target.");
         }

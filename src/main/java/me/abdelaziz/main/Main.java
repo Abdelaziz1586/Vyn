@@ -18,7 +18,7 @@ public final class Main {
 
     public static void main(final String[] args) {
         if (args.length != 1) {
-            System.out.println("Usage: java -jar botify.jar <script.bt>");
+            System.out.println("Usage: java -jar vyn.jar <script.vyn>");
             return;
         }
 

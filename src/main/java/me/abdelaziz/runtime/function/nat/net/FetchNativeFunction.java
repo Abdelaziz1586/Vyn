@@ -1,6 +1,6 @@
 package me.abdelaziz.runtime.function.nat.net;
 
-import me.abdelaziz.runtime.BotifyInstance;
+import me.abdelaziz.runtime.VynInstance;
 import me.abdelaziz.runtime.Value;
 import me.abdelaziz.runtime.function.nat.NativeFunction;
 import me.abdelaziz.util.SimpleJson;
@@ -39,8 +39,8 @@ public final class FetchNativeFunction extends NativeFunction {
                         final Value unpacked = SimpleJson.unpack(configVal.toString());
                         if (unpacked.asJavaObject() instanceof Map)
                             options = (Map<String, Value>) unpacked.asJavaObject();
-                    } else if (configVal.asJavaObject() instanceof BotifyInstance) {
-                        options = ((BotifyInstance) configVal.asJavaObject()).asMap();
+                    } else if (configVal.asJavaObject() instanceof VynInstance) {
+                        options = ((VynInstance) configVal.asJavaObject()).asMap();
                     } else if (configVal.asJavaObject() instanceof Map) {
                         options = (Map<String, Value>) configVal.asJavaObject();
                     }
@@ -79,7 +79,7 @@ public final class FetchNativeFunction extends NativeFunction {
                 conn.setReadTimeout(timeout);
 
                 if (conn.getRequestProperty("User-Agent") == null)
-                    conn.setRequestProperty("User-Agent", "Botify/1.0");
+                    conn.setRequestProperty("User-Agent", "Vyn/1.0");
 
                 if (bodyToSend != null && !method.equals("GET")) {
                     conn.setDoOutput(true);

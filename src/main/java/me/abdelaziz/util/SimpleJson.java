@@ -1,6 +1,6 @@
 package me.abdelaziz.util;
 
-import me.abdelaziz.runtime.BotifyInstance;
+import me.abdelaziz.runtime.VynInstance;
 import me.abdelaziz.runtime.Value;
 import java.util.*;
 
@@ -10,8 +10,8 @@ public final class SimpleJson {
         if (obj == null) return "null";
         if (obj instanceof Value) return pack(((Value) obj).asJavaObject());
 
-        if (obj instanceof BotifyInstance) {
-            final Map<String, Value> map = ((BotifyInstance) obj).asMap();
+        if (obj instanceof VynInstance) {
+            final Map<String, Value> map = ((VynInstance) obj).asMap();
 
             map.values().removeIf(v -> v.asJavaObject() == obj);
 

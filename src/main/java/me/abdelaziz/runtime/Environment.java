@@ -1,6 +1,6 @@
 package me.abdelaziz.runtime;
 
-import me.abdelaziz.runtime.function.BotifyCallable;
+import me.abdelaziz.runtime.function.VynCallable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ public final class Environment {
 
     private Map<String, Value> values;
     private Map<String, Boolean> immutable;
-    private Map<String, BotifyCallable> functions;
+    private Map<String, VynCallable> functions;
 
     public Environment(final Environment parent) {
         this.parent = parent;
@@ -85,12 +85,12 @@ public final class Environment {
         return values != null ? new HashMap<>(values) : new HashMap<>();
     }
 
-    public void defineFunction(final String name, final BotifyCallable function) {
+    public void defineFunction(final String name, final VynCallable function) {
         if (functions == null) functions = new HashMap<>();
         functions.put(name, function);
     }
 
-    public BotifyCallable getFunction(final String name) {
+    public VynCallable getFunction(final String name) {
         if (functions != null && functions.containsKey(name)) return functions.get(name);
         if (parent != null) return parent.getFunction(name);
 
