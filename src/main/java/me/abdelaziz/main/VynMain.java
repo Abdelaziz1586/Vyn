@@ -14,7 +14,11 @@ import me.abdelaziz.runtime.function.nat.system.RandomNativeFunction;
 import me.abdelaziz.runtime.function.nat.system.*;
 import me.abdelaziz.util.Importer;
 
-public final class Main {
+import java.util.function.Consumer;
+
+public final class VynMain {
+
+    private static Consumer<Environment> stdListener;
 
     public static void main(final String[] args) {
         if (args.length != 1) {
@@ -22,7 +26,14 @@ public final class Main {
             return;
         }
 
-        Runtime.getRuntime().addShutdownHook(new Thread(Importer::unloadAll));
+        init(true);
+
+        loadFile(args[0]);
+    }
+
+    public static void init(final boolean addShutdownHook) {
+        if (addShutdownHook)
+            Runtime.getRuntime().addShutdownHook(new Thread(Importer::unloadAll));
 
         Parser.register("make", new MakeHandler());
         Parser.register("lock", new LockHandler());
@@ -41,11 +52,26 @@ public final class Main {
         Parser.register("split", new SplitHandler());
         Parser.register("build", new BuildHandler());
         Parser.register("demolish", new DemolishHandler());
+    }
 
+    public static void loadFile(final String fileName) {
         final Environment globalEnv = new Environment(null);
         addSTDs(globalEnv);
 
-        Importer.load(args[0], globalEnv);
+        Importer.load(fileName, globalEnv);
+    }
+
+    public static Environment loadLines(final String code) {
+        final Environment globalEnv = new Environment(null);
+        addSTDs(globalEnv);
+
+        Importer.loadFromLines(code, globalEnv);
+
+        return globalEnv;
+    }
+
+    public static void setStdListener(final Consumer<Environment> stdListener) {
+        VynMain.stdListener = stdListener;
     }
 
     private static void addSTDs(final Environment globalEnv) {
@@ -64,5 +90,8 @@ public final class Main {
         globalEnv.defineFunction("pack", new PackNativeFunction());
         globalEnv.defineFunction("fetch", new FetchNativeFunction());
         globalEnv.defineFunction("unpack", new UnpackNativeFunction());
+
+        if (stdListener != null)
+            stdListener.accept(globalEnv);
     }
 }

@@ -106,7 +106,7 @@ public final class NativeBinder {
                         try {
                             final Object[] javaArgs = convertArgs(args, method.getParameterTypes());
                             final Object result = method.invoke(javaHost, javaArgs);
-                            return toValue(result);
+                            return toValue(callerEnv, result);
                         } catch (final InvocationTargetException e) {
                             throw unwrap(e);
                         } catch (final Exception e) {
@@ -146,14 +146,20 @@ public final class NativeBinder {
             return val.asDouble();
         if (target == boolean.class || target == Boolean.class)
             return val.asBoolean();
-        return val.asJavaObject();
+
+        final Object obj = val.asJavaObject();
+
+        if (obj instanceof VynInstance) {
+            final VynInstance instance = (VynInstance) obj;
+            if (instance.has("__host__")) {
+                final Object host = instance.get("__host__").asJavaObject();
+                if (host != null && target.isInstance(host)) {
+                    return host;
+                }
+            }
+        }
+
+        return obj;
     }
 
-    private static Value toValue(final Object obj) {
-        if (obj == null)
-            return new Value(null);
-        if (obj instanceof Value)
-            return (Value) obj;
-        return new Value(obj);
-    }
 }

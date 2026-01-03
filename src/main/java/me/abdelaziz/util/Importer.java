@@ -51,17 +51,20 @@ public final class Importer {
             if (!file.exists()) throw new RuntimeException("File not found: " + path);
 
             loadedFiles.add(absPath);
-            final String code = new String(Files.readAllBytes(file.toPath()));
-            final Lexer lexer = new Lexer(code);
-            final Parser parser = new Parser(lexer.tokenize());
-            final List<Statement> program = parser.parse();
-
-            for (final Statement stmt : program) stmt.execute(env);
-
+            loadFromLines(new String(Files.readAllBytes(file.toPath())), env);
         } catch (final Exception e) {
             final String msg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
             throw new RuntimeException("Error loading '" + path + "': " + msg);
         }
+    }
+
+    public static void loadFromLines(final String code, final Environment env) {
+        final Lexer lexer = new Lexer(code);
+        final Parser parser = new Parser(lexer.tokenize());
+        final List<Statement> program = parser.parse();
+
+        for (final Statement stmt : program)
+            stmt.execute(env);
     }
 
     public static void unloadAll() {
