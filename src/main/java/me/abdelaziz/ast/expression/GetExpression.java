@@ -4,6 +4,7 @@ import me.abdelaziz.ast.Expression;
 import me.abdelaziz.runtime.VynInstance;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
+import me.abdelaziz.runtime.clazz.VynCatalog;
 
 import java.util.Map;
 
@@ -33,6 +34,9 @@ public final class GetExpression implements Expression {
 
         if (raw instanceof VynInstance)
             return ((VynInstance) raw).get(name);
+
+        if (raw instanceof VynCatalog)
+            return ((VynCatalog) raw).get(name);
 
         if (raw instanceof Map)
             return ((Map<String, Value>) raw).getOrDefault(name, new Value(null));

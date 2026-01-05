@@ -46,6 +46,7 @@ public final class VynMain {
         Parser.register("write", parser -> new PrintStatement(parser.expression(), false));
         Parser.register("check", new CheckHandler());
         Parser.register("blueprint", new BlueprintHandler());
+        Parser.register("catalog", new CatalogHandler());
         Parser.register("cycle", new CycleHandler());
         Parser.register("task", new TaskHandler());
         Parser.register("reply", parser -> new ReturnStatement(parser.expression()));
