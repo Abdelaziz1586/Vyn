@@ -1,7 +1,9 @@
 package me.abdelaziz.runtime;
 
+import me.abdelaziz.runtime.clazz.VynClass;
 import me.abdelaziz.runtime.function.VynCallable;
 
+import java.util.Collections;
 import java.util.Map;
 
 public final class VynInstance {
@@ -47,6 +49,11 @@ public final class VynInstance {
 
     @Override
     public String toString() {
+        // Ahmed 3amr's change
+        if (fields.hasFunction("stringify")) {
+            return fields.getFunction("stringify").call(fields, Collections.emptyList()).toString();
+        }
+
         final Map<String, Value> vars = fields.getVariables();
         final StringBuilder sb = new StringBuilder("{");
         int i = 0;

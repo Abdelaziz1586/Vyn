@@ -1,6 +1,11 @@
 package me.abdelaziz.runtime;
 
+import me.abdelaziz.runtime.clazz.VynClass;
+import me.abdelaziz.runtime.clazz.nat.NativeClass;
+import me.abdelaziz.runtime.function.OverloadedFunction;
 import me.abdelaziz.runtime.function.VynCallable;
+
+import java.util.Collections;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,10 +23,13 @@ public final class Environment {
     }
 
     public void define(final String name, final Value value, final boolean isConstant) {
-        if (values == null) values = new HashMap<>();
-        if (immutable == null) immutable = new HashMap<>();
+        if (values == null)
+            values = new HashMap<>();
+        if (immutable == null)
+            immutable = new HashMap<>();
 
-        if (values.containsKey(name)) throw new RuntimeException("Variable '" + name + "' already defined.");
+        if (values.containsKey(name))
+            throw new RuntimeException("Variable '" + name + "' already defined.");
 
         values.put(name, value);
         immutable.put(name, isConstant);
@@ -33,7 +41,8 @@ public final class Environment {
             return;
         }
 
-        if (update(name, value)) return;
+        if (update(name, value))
+            return;
 
         define(name, value, false);
     }
@@ -47,7 +56,8 @@ public final class Environment {
             return true;
         }
 
-        if (parent != null) return parent.update(name, value);
+        if (parent != null)
+            return parent.update(name, value);
 
         return false;
     }
@@ -66,17 +76,25 @@ public final class Environment {
     }
 
     public Value get(final String name) {
-        if (values != null && values.containsKey(name)) return values.get(name);
-        if (parent != null) return parent.get(name);
+        if (values != null) {
+            final Value val = values.get(name);
+            if (val != null)
+                return val;
+        }
+        if (parent != null)
+            return parent.get(name);
 
         throw new RuntimeException("Undefined variable '" + name + "'");
     }
 
     public boolean has(final String name) {
-        if (values != null && values.containsKey(name)) return true;
-        if (functions != null && functions.containsKey(name)) return true;
+        if (values != null && values.containsKey(name))
+            return true;
+        if (functions != null && functions.containsKey(name))
+            return true;
 
-        if (parent != null) return parent.has(name);
+        if (parent != null)
+            return parent.has(name);
 
         return false;
     }
@@ -85,16 +103,52 @@ public final class Environment {
         return values != null ? new HashMap<>(values) : new HashMap<>();
     }
 
+    public boolean hasFunction(final String name) {
+        if (functions != null && functions.containsKey(name))
+            return true;
+        if (parent != null)
+            return parent.hasFunction(name);
+        return false;
+    }
+
     public void defineFunction(final String name, final VynCallable function) {
-        if (functions == null) functions = new HashMap<>();
-        functions.put(name, function);
+        if (functions == null)
+            functions = new HashMap<>();
+
+        final VynCallable saved = functions.get(name);
+        if (saved == null) {
+            functions.put(name, function);
+            return;
+        }
+
+        final VynCallable existing = functions.get(name);
+        final OverloadedFunction overloaded;
+
+        if (existing instanceof OverloadedFunction) {
+            overloaded = (OverloadedFunction) existing;
+        } else {
+            overloaded = new OverloadedFunction();
+            overloaded.addFunction(existing);
+            functions.put(name, overloaded);
+        }
+
+        overloaded.addFunction(function);
     }
 
     public VynCallable getFunction(final String name) {
-        if (functions != null && functions.containsKey(name)) return functions.get(name);
-        if (parent != null) return parent.getFunction(name);
+        if (functions != null) {
+            final VynCallable func = functions.get(name);
+            if (func != null)
+                return func;
+        }
+        if (parent != null)
+            return parent.getFunction(name);
 
         throw new RuntimeException("Undefined task '" + name + "'");
+    }
+
+    public void defineClass(final String name, final NativeClass nativeClass) {
+        define(name, new Value(new VynClass(name, null, Collections.singletonList(nativeClass::execute), this)), true);
     }
 
     @Override

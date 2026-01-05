@@ -7,7 +7,6 @@ import me.abdelaziz.ast.statement.CycleStatement;
 import me.abdelaziz.parser.Parser;
 import me.abdelaziz.token.TokenType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class CycleHandler implements StatementHandler {
@@ -29,19 +28,9 @@ public final class CycleHandler implements StatementHandler {
         return new CycleStatement(variableName, start, end, parseBody(parser));
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     private List<Statement> parseBody(final Parser parser) {
         parser.consume("do", "Expected 'do'");
-        final List<Statement> body = new ArrayList<>();
-
-        while (true) {
-            while (parser.match(TokenType.NEWLINE));
-
-            if (parser.check("end") || parser.check(TokenType.EOF))
-                break;
-
-            body.add(parser.statement());
-        }
+        final List<Statement> body = parser.parseBlock("end");
 
         parser.consume("end", "Expected 'end'");
         return body;

@@ -1,7 +1,7 @@
 package me.abdelaziz.ast.statement;
 
 import me.abdelaziz.ast.Statement;
-import me.abdelaziz.runtime.VynClass;
+import me.abdelaziz.runtime.clazz.VynClass;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 import java.util.List;

@@ -19,10 +19,14 @@ public final class BinaryExpression implements Expression {
     public Value evaluate(final Environment env) {
         final Value l = left.evaluate(env);
         final Value r = right.evaluate(env);
+
         switch (operator) {
             case "+":
-                if (l.asJavaObject() instanceof String || r.asJavaObject() instanceof String)
-                    return new Value(l + r.toString());
+                // Fast path: check strings first since instanceof is optimized by JVM
+                final Object lObj = l.asJavaObject();
+                final Object rObj = r.asJavaObject();
+                if (lObj instanceof String || rObj instanceof String)
+                    return new Value(l.toString() + r);
 
                 return new Value(l.asDouble() + r.asDouble());
             case "-":

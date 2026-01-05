@@ -15,7 +15,6 @@ public final class BuildHandler implements StatementHandler {
     @SuppressWarnings("StatementWithEmptyBody")
     public Statement parse(final Parser parser) {
         final List<String> params = new ArrayList<>();
-
         if (parser.check("takes")) {
             parser.consume("takes", "Expect 'takes'");
             do {

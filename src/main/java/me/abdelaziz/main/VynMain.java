@@ -3,6 +3,7 @@ package me.abdelaziz.main;
 import me.abdelaziz.feature.*;
 import me.abdelaziz.parser.Parser;
 import me.abdelaziz.runtime.Environment;
+import me.abdelaziz.runtime.clazz.nat.ListNativeClass;
 import me.abdelaziz.runtime.function.nat.conversion.StringNativeFunction;
 import me.abdelaziz.runtime.function.nat.net.AtNativeFunction;
 import me.abdelaziz.runtime.function.nat.net.FetchNativeFunction;
@@ -10,12 +11,15 @@ import me.abdelaziz.runtime.function.nat.net.PackNativeFunction;
 import me.abdelaziz.runtime.function.nat.net.UnpackNativeFunction;
 import me.abdelaziz.runtime.function.nat.conversion.IntegerNativeFunction;
 import me.abdelaziz.runtime.function.nat.conversion.NumberNativeFunction;
+
 import me.abdelaziz.runtime.function.nat.system.RandomNativeFunction;
 import me.abdelaziz.runtime.function.nat.system.*;
+import me.abdelaziz.ast.statement.*;
 import me.abdelaziz.util.Importer;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public final class VynMain {
 
     private static Consumer<Environment> stdListener;
@@ -37,18 +41,18 @@ public final class VynMain {
 
         Parser.register("make", new MakeHandler());
         Parser.register("lock", new LockHandler());
-        Parser.register("say", new OutputHandler(true));
-        Parser.register("write", new OutputHandler(false));
+        Parser.register("say", parser -> new PrintStatement(parser.expression(), true));
+        Parser.register("write", parser -> new PrintStatement(parser.expression(), false));
         Parser.register("check", new CheckHandler());
         Parser.register("blueprint", new BlueprintHandler());
         Parser.register("cycle", new CycleHandler());
         Parser.register("task", new TaskHandler());
-        Parser.register("reply", new ReplyHandler());
+        Parser.register("reply", parser -> new ReturnStatement(parser.expression()));
         Parser.register("use", new UseHandler());
         Parser.register("attempt", new AttemptHandler());
-        Parser.register("escape", new EscapeHandler());
-        Parser.register("skip", new SkipHandler());
-        Parser.register("hold", new HoldHandler());
+        Parser.register("escape", parser -> new BreakStatement());
+        Parser.register("skip", parser -> new ContinueStatement());
+        Parser.register("hold", parser -> new HoldStatement(parser.expression()));
         Parser.register("split", new SplitHandler());
         Parser.register("build", new BuildHandler());
         Parser.register("demolish", new DemolishHandler());
@@ -70,15 +74,6 @@ public final class VynMain {
         return globalEnv;
     }
 
-    public static Environment loadLines(final String code, final String fileName) {
-        final Environment globalEnv = new Environment(null);
-        addSTDs(globalEnv);
-
-        Importer.loadFromLines(code, globalEnv);
-
-        return globalEnv;
-    }
-
     public static void setStdListener(final Consumer<Environment> stdListener) {
         VynMain.stdListener = stdListener;
     }
@@ -90,8 +85,8 @@ public final class VynMain {
         globalEnv.defineFunction("input", new InputNativeFunction());
         globalEnv.defineFunction("random", new RandomNativeFunction());
         globalEnv.defineFunction("discard", new DiscardNativeFunction());
-        globalEnv.defineFunction("min", new MinNativeFunction());
-        globalEnv.defineFunction("max", new MaxNativeFunction());
+        globalEnv.defineFunction("min", new MinMaxNativeFunction(true));
+        globalEnv.defineFunction("max", new MinMaxNativeFunction(false));
 
         globalEnv.defineFunction("int", new IntegerNativeFunction());
         globalEnv.defineFunction("number", new NumberNativeFunction());
@@ -101,6 +96,8 @@ public final class VynMain {
         globalEnv.defineFunction("pack", new PackNativeFunction());
         globalEnv.defineFunction("fetch", new FetchNativeFunction());
         globalEnv.defineFunction("unpack", new UnpackNativeFunction());
+
+        globalEnv.defineClass("List", new ListNativeClass());
 
         if (stdListener != null)
             stdListener.accept(globalEnv);

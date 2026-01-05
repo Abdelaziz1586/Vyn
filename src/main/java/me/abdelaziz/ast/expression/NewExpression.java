@@ -2,7 +2,7 @@ package me.abdelaziz.ast.expression;
 
 import me.abdelaziz.ast.Expression;
 import me.abdelaziz.ast.Statement;
-import me.abdelaziz.runtime.VynClass;
+import me.abdelaziz.runtime.clazz.VynClass;
 import me.abdelaziz.runtime.VynInstance;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;

@@ -20,6 +20,11 @@ public final class VynFunction implements VynCallable {
     }
 
     @Override
+    public int arity() {
+        return parameters.size();
+    }
+
+    @Override
     public Value call(final Environment ignoredEnv, final List<Value> arguments) {
         final Environment fnEnv = new Environment(closure);
 

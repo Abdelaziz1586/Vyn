@@ -42,6 +42,30 @@ public final class Parser {
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
+    public List<Statement> parseBlock(final String... terminators) {
+        final List<Statement> body = new ArrayList<>();
+        while (true) {
+            while (match(TokenType.NEWLINE));
+
+            if (check(TokenType.EOF))
+                break;
+
+            boolean foundTerminator = false;
+            for (String term : terminators) {
+                if (check(term)) {
+                    foundTerminator = true;
+                    break;
+                }
+            }
+            if (foundTerminator)
+                break;
+
+            body.add(statement());
+        }
+        return body;
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
     public Statement statement() {
         while (match(TokenType.NEWLINE))
             ;

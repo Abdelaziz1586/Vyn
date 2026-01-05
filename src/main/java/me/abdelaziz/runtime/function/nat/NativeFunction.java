@@ -9,10 +9,21 @@ import java.util.function.BiFunction;
 
 public class NativeFunction implements VynCallable {
 
+    private final int arity;
     private final BiFunction<Environment, List<Value>, Value> logic;
 
-    public NativeFunction(final BiFunction<Environment, List<Value>, Value> logic) {
+    public NativeFunction(final int arity, final BiFunction<Environment, List<Value>, Value> logic) {
+        this.arity = arity;
         this.logic = logic;
+    }
+
+    public NativeFunction(final BiFunction<Environment, List<Value>, Value> logic) {
+        this(-1, logic);
+    }
+
+    @Override
+    public int arity() {
+        return arity;
     }
 
     @Override

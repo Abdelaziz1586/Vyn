@@ -16,7 +16,8 @@ public final class CycleStatement implements Statement {
     private final Expression conditionExpr;
     private final List<Statement> body;
 
-    public CycleStatement(final String variableName, final Expression start, final Expression end, final List<Statement> body) {
+    public CycleStatement(final String variableName, final Expression start, final Expression end,
+            final List<Statement> body) {
         this.variableName = variableName;
         this.startExpr = start;
         this.endExpr = end;
@@ -48,26 +49,45 @@ public final class CycleStatement implements Statement {
             return;
         }
 
-        if (startExpr == null || endExpr == null) return;
+        if (startExpr == null || endExpr == null)
+            return;
 
-        final double start = startExpr.evaluate(env).asDouble();
-        final double end = endExpr.evaluate(env).asDouble();
+        final Value startVal = startExpr.evaluate(env);
+        final Value endVal = endExpr.evaluate(env);
 
         final Environment loopEnv = new Environment(env);
 
-        final Value iterator = new Value(start);
+        if (startVal.isInteger() && endVal.isInteger()) {
+            final long start = startVal.asLong();
+            final long end = endVal.asLong();
+            final Value iterator = new Value(start);
+            loopEnv.define(variableName, iterator, false);
 
-        loopEnv.define(variableName, iterator, false);
+            for (long i = start; i <= end; i++) {
+                iterator.set(i);
+                try {
+                    for (final Statement stmt : body)
+                        stmt.execute(loopEnv);
+                } catch (final ContinueException ignored) {
+                } catch (final BreakException ignored) {
+                    break;
+                }
+            }
+        } else {
+            final double start = startVal.asDouble();
+            final double end = endVal.asDouble();
+            final Value iterator = new Value(start);
+            loopEnv.define(variableName, iterator, false);
 
-        for (double i = start; i <= end; i++) {
-            iterator.set(i);
-
-            try {
-                for (final Statement stmt : body)
-                    stmt.execute(loopEnv);
-            } catch (final ContinueException ignored) {
-            } catch (final BreakException ignored) {
-                break;
+            for (double i = start; i <= end; i++) {
+                iterator.set(i);
+                try {
+                    for (final Statement stmt : body)
+                        stmt.execute(loopEnv);
+                } catch (final ContinueException ignored) {
+                } catch (final BreakException ignored) {
+                    break;
+                }
             }
         }
     }

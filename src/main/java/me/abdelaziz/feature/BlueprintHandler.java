@@ -6,13 +6,11 @@ import me.abdelaziz.ast.statement.ClassDeclaration;
 import me.abdelaziz.token.TokenType;
 import me.abdelaziz.parser.Parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class BlueprintHandler implements StatementHandler {
 
     @Override
-    @SuppressWarnings("StatementWithEmptyBody")
     public Statement parse(final Parser parser) {
         final String name = parser.consume(TokenType.IDENTIFIER, "Expected class name").text;
 
@@ -24,15 +22,7 @@ public final class BlueprintHandler implements StatementHandler {
 
         parser.consume("do", "Expected 'do'");
 
-        final List<Statement> body = new ArrayList<>();
-        while (true) {
-            while (parser.match(TokenType.NEWLINE));
-
-            if (parser.check("end") || parser.check(TokenType.EOF))
-                break;
-
-            body.add(parser.statement());
-        }
+        final List<Statement> body = parser.parseBlock("end");
 
         parser.consume("end", "Expected 'end'");
         return new ClassDeclaration(name, parentName, body);

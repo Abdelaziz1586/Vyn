@@ -1,6 +1,8 @@
-package me.abdelaziz.runtime;
+package me.abdelaziz.runtime.clazz;
 
 import me.abdelaziz.ast.Statement;
+import me.abdelaziz.runtime.Environment;
+
 import java.util.List;
 
 public final class VynClass {

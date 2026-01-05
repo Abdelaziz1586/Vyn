@@ -4,10 +4,8 @@ import me.abdelaziz.api.VynLibrary;
 import me.abdelaziz.api.annotation.VynType;
 import me.abdelaziz.ast.Statement;
 import me.abdelaziz.lexer.Lexer;
-import me.abdelaziz.main.VynMain;
 import me.abdelaziz.parser.Parser;
 import me.abdelaziz.runtime.Environment;
-import me.abdelaziz.runtime.function.VynCallable;
 
 import java.io.File;
 import java.net.URL;
@@ -25,9 +23,11 @@ public final class Importer {
         try {
             if (path.startsWith("java:")) {
                 final String className = path.substring(5);
-                if (loadedFiles.contains(className)) return;
+                if (loadedFiles.contains(className))
+                    return;
 
-                if (libraryLoader == null) initLibraryLoader();
+                if (libraryLoader == null)
+                    initLibraryLoader();
                 final Class<?> clazz = Class.forName(className, true, libraryLoader);
 
                 if (clazz.isAnnotationPresent(VynType.class)) {
@@ -49,8 +49,10 @@ public final class Importer {
 
             final File file = new File(path);
             final String absPath = file.getCanonicalPath();
-            if (loadedFiles.contains(absPath)) return;
-            if (!file.exists()) throw new RuntimeException("File not found: " + path);
+            if (loadedFiles.contains(absPath))
+                return;
+            if (!file.exists())
+                throw new RuntimeException("File not found: " + path);
 
             loadedFiles.add(absPath);
             loadFromLines(new String(Files.readAllBytes(file.toPath())), env);
@@ -89,7 +91,8 @@ public final class Importer {
             }
 
             File[] jars = libsDir.listFiles((dir, name) -> name.endsWith(".jar"));
-            if (jars == null) jars = new File[0];
+            if (jars == null)
+                jars = new File[0];
 
             final URL[] urls = new URL[jars.length];
             for (int i = 0; i < jars.length; i++)
