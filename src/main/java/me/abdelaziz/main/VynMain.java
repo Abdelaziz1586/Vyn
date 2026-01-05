@@ -4,6 +4,7 @@ import me.abdelaziz.feature.*;
 import me.abdelaziz.parser.Parser;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.clazz.nat.ListNativeClass;
+import me.abdelaziz.runtime.clazz.nat.MapNativeClass;
 import me.abdelaziz.runtime.function.nat.conversion.StringNativeFunction;
 import me.abdelaziz.runtime.function.nat.net.AtNativeFunction;
 import me.abdelaziz.runtime.function.nat.net.FetchNativeFunction;
@@ -97,6 +98,7 @@ public final class VynMain {
         globalEnv.defineFunction("fetch", new FetchNativeFunction());
         globalEnv.defineFunction("unpack", new UnpackNativeFunction());
 
+        globalEnv.defineClass("Map", new MapNativeClass());
         globalEnv.defineClass("List", new ListNativeClass());
 
         if (stdListener != null)

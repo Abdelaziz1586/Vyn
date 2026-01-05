@@ -45,7 +45,8 @@ public final class Parser {
     public List<Statement> parseBlock(final String... terminators) {
         final List<Statement> body = new ArrayList<>();
         while (true) {
-            while (match(TokenType.NEWLINE));
+            while (match(TokenType.NEWLINE))
+                ;
 
             if (check(TokenType.EOF))
                 break;

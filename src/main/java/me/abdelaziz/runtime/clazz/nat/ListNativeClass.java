@@ -72,6 +72,10 @@ public final class ListNativeClass extends NativeClass {
                 return new Value(values.isEmpty() ? null : values.size() == 1 ? values.get(0) : values);
             }));
 
+            env.defineFunction("size", new NativeFunction((callerEnv, args) -> new Value(list.size())));
+
+            env.defineFunction("isEmpty", new NativeFunction((callerEnv, args) -> new Value(list.isEmpty())));
+
             env.defineFunction("stringify", new NativeFunction((callerEnv, args) -> new Value(list.toString())));
         });
     }
