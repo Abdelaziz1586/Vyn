@@ -4,8 +4,10 @@ import me.abdelaziz.api.VynLibrary;
 import me.abdelaziz.api.annotation.VynType;
 import me.abdelaziz.ast.Statement;
 import me.abdelaziz.lexer.Lexer;
+import me.abdelaziz.main.VynMain;
 import me.abdelaziz.parser.Parser;
 import me.abdelaziz.runtime.Environment;
+import me.abdelaziz.runtime.function.VynCallable;
 
 import java.io.File;
 import java.net.URL;
@@ -15,9 +17,9 @@ import java.util.*;
 
 public final class Importer {
 
+    private static ClassLoader libraryLoader;
     private static final Set<String> loadedFiles = new HashSet<>();
     private static final List<VynLibrary> loadedLibraries = new ArrayList<>();
-    private static ClassLoader libraryLoader;
 
     public static void load(final String path, final Environment env) {
         try {

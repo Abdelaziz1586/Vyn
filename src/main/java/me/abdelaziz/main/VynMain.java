@@ -70,6 +70,15 @@ public final class VynMain {
         return globalEnv;
     }
 
+    public static Environment loadLines(final String code, final String fileName) {
+        final Environment globalEnv = new Environment(null);
+        addSTDs(globalEnv);
+
+        Importer.loadFromLines(code, globalEnv);
+
+        return globalEnv;
+    }
+
     public static void setStdListener(final Consumer<Environment> stdListener) {
         VynMain.stdListener = stdListener;
     }
@@ -81,6 +90,8 @@ public final class VynMain {
         globalEnv.defineFunction("input", new InputNativeFunction());
         globalEnv.defineFunction("random", new RandomNativeFunction());
         globalEnv.defineFunction("discard", new DiscardNativeFunction());
+        globalEnv.defineFunction("min", new MinNativeFunction());
+        globalEnv.defineFunction("max", new MaxNativeFunction());
 
         globalEnv.defineFunction("int", new IntegerNativeFunction());
         globalEnv.defineFunction("number", new NumberNativeFunction());
