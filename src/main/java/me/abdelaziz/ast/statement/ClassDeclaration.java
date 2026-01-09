@@ -18,6 +18,18 @@ public final class ClassDeclaration implements Statement {
         this.body = body;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public List<Statement> getBody() {
+        return body;
+    }
+
     @Override
     public void execute(final Environment env) {
         env.define(name, new Value(new VynClass(name, parentName, body, env)), true);

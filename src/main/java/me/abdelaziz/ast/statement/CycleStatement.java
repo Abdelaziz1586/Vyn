@@ -17,7 +17,7 @@ public final class CycleStatement implements Statement {
     private final List<Statement> body;
 
     public CycleStatement(final String variableName, final Expression start, final Expression end,
-            final List<Statement> body) {
+                          final List<Statement> body) {
         this.variableName = variableName;
         this.startExpr = start;
         this.endExpr = end;
@@ -31,6 +31,26 @@ public final class CycleStatement implements Statement {
         this.endExpr = null;
         this.conditionExpr = condition;
         this.body = body;
+    }
+
+    public List<Statement> getBody() {
+        return body;
+    }
+
+    public Expression getConditionExpr() {
+        return conditionExpr;
+    }
+
+    public Expression getEndExpr() {
+        return endExpr;
+    }
+
+    public Expression getStartExpr() {
+        return startExpr;
+    }
+
+    public String getVariableName() {
+        return variableName;
     }
 
     @Override

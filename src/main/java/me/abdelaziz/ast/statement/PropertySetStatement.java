@@ -15,6 +15,18 @@ public final class PropertySetStatement implements Statement {
         this.object = object; this.propertyName = propertyName; this.value = value;
     }
 
+    public Expression getObject() {
+        return object;
+    }
+
+    public Expression getValue() {
+        return value;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
     @Override
     public void execute(final Environment env) {
         final Value objVal = object.evaluate(env);

@@ -20,6 +20,14 @@ public final class NewExpression implements Expression {
         this.arguments = arguments;
     }
 
+    public String getClassName() {
+        return className;
+    }
+
+    public List<Expression> getArguments() {
+        return arguments;
+    }
+
     @Override
     public Value evaluate(final Environment env) {
         final Value classVal = env.get(className);

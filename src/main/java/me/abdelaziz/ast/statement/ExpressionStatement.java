@@ -12,6 +12,10 @@ public final class ExpressionStatement implements Statement {
         this.expression = expression;
     }
 
+    public Expression getExpression() {
+        return expression;
+    }
+
     @Override
     public void execute(final Environment env) {
         expression.evaluate(env);

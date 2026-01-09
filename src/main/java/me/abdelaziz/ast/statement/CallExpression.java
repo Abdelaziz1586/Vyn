@@ -21,6 +21,14 @@ public final class CallExpression implements Expression {
         this.arguments = arguments;
     }
 
+    public Expression getCallee() {
+        return callee;
+    }
+
+    public List<Expression> getArguments() {
+        return arguments;
+    }
+
     @Override
     public Value evaluate(final Environment env) {
         final VynCallable function;

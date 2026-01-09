@@ -14,6 +14,14 @@ public final class UnaryExpression implements Expression {
         this.right = right;
     }
 
+    public Expression getRight() {
+        return right;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
     @Override
     public Value evaluate(final Environment env) {
         final Value result = right.evaluate(env);

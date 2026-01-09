@@ -15,6 +15,18 @@ public final class BinaryExpression implements Expression {
         this.right = right;
     }
 
+    public Expression getLeft() {
+        return left;
+    }
+
+    public Expression getRight() {
+        return right;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
     @Override
     public Value evaluate(final Environment env) {
         final Value l = left.evaluate(env);

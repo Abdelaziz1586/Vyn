@@ -18,12 +18,12 @@ public final class GetExpression implements Expression {
         this.name = name;
     }
 
-    public Expression getObject() {
-        return object;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public Expression getObject() {
+        return object;
     }
 
     @Override

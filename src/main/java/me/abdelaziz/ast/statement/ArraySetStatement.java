@@ -16,6 +16,18 @@ public final class ArraySetStatement implements Statement {
         this.value = value;
     }
 
+    public Expression getObject() {
+        return object;
+    }
+
+    public Expression getValue() {
+        return value;
+    }
+
+    public Expression getIndex() {
+        return index;
+    }
+
     @Override
     public void execute(final Environment env) {
         final Value objVal = object.evaluate(env),

@@ -13,6 +13,10 @@ public final class SplitStatement implements Statement {
         this.body = body;
     }
 
+    public List<Statement> getBody() {
+        return body;
+    }
+
     @Override
     public void execute(final Environment env) {
         final Environment threadEnv = new Environment(env);

@@ -5,10 +5,15 @@ import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 
 public final class LiteralExpression implements Expression {
+
     private final Value value;
 
     public LiteralExpression(final Object value) {
         this.value = new Value(value);
+    }
+
+    public Value getValue() {
+        return value;
     }
 
     @Override

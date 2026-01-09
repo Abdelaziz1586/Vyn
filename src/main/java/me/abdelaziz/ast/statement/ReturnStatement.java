@@ -14,6 +14,10 @@ public final class ReturnStatement implements Statement {
         this.valueExpr = valueExpr;
     }
 
+    public Expression getValueExpr() {
+        return valueExpr;
+    }
+
     @Override
     public void execute(final Environment env) {
         final Value result = valueExpr.evaluate(env);

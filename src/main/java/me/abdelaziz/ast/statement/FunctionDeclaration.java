@@ -18,6 +18,18 @@ public final class FunctionDeclaration implements Statement {
         this.body = body;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getParams() {
+        return params;
+    }
+
+    public List<Statement> getBody() {
+        return body;
+    }
+
     @Override
     public void execute(final Environment env) {
         env.defineFunction(name, new VynFunction(params, body, env));

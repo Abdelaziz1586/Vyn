@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class Environment {
+public class Environment {
 
     private final Environment parent;
 

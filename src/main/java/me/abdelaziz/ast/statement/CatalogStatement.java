@@ -19,6 +19,14 @@ public final class CatalogStatement implements Statement {
         this.entries = entries;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getEntries() {
+        return entries;
+    }
+
     @Override
     public void execute(final Environment env) {
         final Map<String, Value> catalogEntries = new LinkedHashMap<>();

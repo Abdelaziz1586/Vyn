@@ -16,6 +16,18 @@ public final class IfStatement implements Statement {
         this.elseBranch = elseBranch;
     }
 
+    public Expression getCondition() {
+        return condition;
+    }
+
+    public List<Statement> getThenBranch() {
+        return thenBranch;
+    }
+
+    public List<Statement> getElseBranch() {
+        return elseBranch;
+    }
+
     @Override
     public void execute(final Environment env) {
         if (condition.evaluate(env).asBoolean())

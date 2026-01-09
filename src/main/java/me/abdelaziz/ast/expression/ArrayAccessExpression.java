@@ -14,6 +14,14 @@ public final class ArrayAccessExpression implements Expression {
         this.index = index;
     }
 
+    public Expression getIndex() {
+        return index;
+    }
+
+    public Expression getObject() {
+        return object;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public Value evaluate(final Environment env) {

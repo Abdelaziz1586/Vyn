@@ -12,6 +12,10 @@ public final class HoldStatement implements Statement {
         this.timeExpr = timeExpr;
     }
 
+    public Expression getTimeExpr() {
+        return timeExpr;
+    }
+
     @Override
     public void execute(final Environment env) {
         final long time = timeExpr.evaluate(env).asDouble().longValue();

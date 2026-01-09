@@ -14,6 +14,14 @@ public final class PrintStatement implements Statement {
         this.isNewLine = isNewLine;
     }
 
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public boolean isNewLine() {
+        return isNewLine;
+    }
+
     @Override
     public void execute(final Environment env) {
         final Object val = expression.evaluate(env);

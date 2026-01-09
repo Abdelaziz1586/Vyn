@@ -18,6 +18,18 @@ public final class TryStatement implements Statement {
         this.errorVariableName = errorVariableName;
     }
 
+    public List<Statement> getTryBlock() {
+        return tryBlock;
+    }
+
+    public List<Statement> getCatchBlock() {
+        return catchBlock;
+    }
+
+    public String getErrorVariableName() {
+        return errorVariableName;
+    }
+
     @Override
     public void execute(final Environment env) {
         try {

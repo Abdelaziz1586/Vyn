@@ -16,6 +16,14 @@ public final class VarDeclaration implements Statement {
         this.isConstant = isConstant;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Expression getInitializer() {
+        return initializer;
+    }
+
     @Override
     public void execute(final Environment env) {
         env.defineOrAssign(name, initializer.evaluate(env), isConstant);
