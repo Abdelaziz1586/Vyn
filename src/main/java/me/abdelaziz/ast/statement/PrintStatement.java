@@ -2,6 +2,7 @@ package me.abdelaziz.ast.statement;
 
 import me.abdelaziz.ast.Expression;
 import me.abdelaziz.ast.Statement;
+import me.abdelaziz.runtime.AdaptivePrinter;
 import me.abdelaziz.runtime.Environment;
 
 public final class PrintStatement implements Statement {
@@ -26,7 +27,7 @@ public final class PrintStatement implements Statement {
     public void execute(final Environment env) {
         final Object val = expression.evaluate(env);
         if (isNewLine) {
-            System.out.println(val);
+            AdaptivePrinter.print(val);
             return;
         }
 

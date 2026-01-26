@@ -7,6 +7,7 @@ import me.abdelaziz.compiler.BytecodeCompiler;
 import me.abdelaziz.feature.*;
 import me.abdelaziz.lexer.Lexer;
 import me.abdelaziz.parser.Parser;
+import me.abdelaziz.runtime.AdaptivePrinter;
 import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.Value;
 import me.abdelaziz.runtime.clazz.nat.ListNativeClass;
@@ -75,6 +76,8 @@ public final class VynMain {
                 loadFile(inputPath);
             }
         }
+
+        AdaptivePrinter.close();
     }
 
     private static void compileToFile(final String input, final String output, final boolean debug) {
