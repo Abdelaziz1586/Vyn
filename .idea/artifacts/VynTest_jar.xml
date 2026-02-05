@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="VynTest:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/VynTest_jar</output-path>
+    <root id="archive" name="VynTest.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="VynTest" />
+    </root>
+  </artifact>
+</component>
