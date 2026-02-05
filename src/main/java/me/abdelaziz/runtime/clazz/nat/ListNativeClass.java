@@ -69,7 +69,7 @@ public final class ListNativeClass extends NativeClass {
                     values.add(list.get(intVal));
                 }
 
-                return new Value(values.isEmpty() ? null : values.size() == 1 ? values.get(0) : values);
+                return values.isEmpty() ? new Value(null) : (values.size() == 1 ? values.get(0) : new Value(values));
             }));
 
             env.defineFunction("size", new NativeFunction((callerEnv, args) -> new Value(list.size())));

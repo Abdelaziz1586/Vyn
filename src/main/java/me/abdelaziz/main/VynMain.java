@@ -6,6 +6,8 @@ import me.abdelaziz.runtime.Environment;
 import me.abdelaziz.runtime.clazz.nat.ListNativeClass;
 import me.abdelaziz.runtime.clazz.nat.MapNativeClass;
 import me.abdelaziz.runtime.function.nat.conversion.StringNativeFunction;
+import me.abdelaziz.runtime.function.nat.math.MinMaxNativeFunction;
+import me.abdelaziz.runtime.function.nat.math.TrigNativeFunction;
 import me.abdelaziz.runtime.function.nat.net.AtNativeFunction;
 import me.abdelaziz.runtime.function.nat.net.FetchNativeFunction;
 import me.abdelaziz.runtime.function.nat.net.PackNativeFunction;
@@ -13,7 +15,7 @@ import me.abdelaziz.runtime.function.nat.net.UnpackNativeFunction;
 import me.abdelaziz.runtime.function.nat.conversion.IntegerNativeFunction;
 import me.abdelaziz.runtime.function.nat.conversion.NumberNativeFunction;
 
-import me.abdelaziz.runtime.function.nat.system.RandomNativeFunction;
+import me.abdelaziz.runtime.function.nat.math.RandomNativeFunction;
 import me.abdelaziz.runtime.function.nat.system.*;
 import me.abdelaziz.ast.statement.*;
 import me.abdelaziz.util.Importer;
@@ -98,6 +100,9 @@ public final class VynMain {
         globalEnv.defineFunction("pack", new PackNativeFunction());
         globalEnv.defineFunction("fetch", new FetchNativeFunction());
         globalEnv.defineFunction("unpack", new UnpackNativeFunction());
+
+        for (final TrigNativeFunction.TrigType type : TrigNativeFunction.TrigType.values())
+            globalEnv.defineFunction(type.getName(), new TrigNativeFunction(type));
 
         globalEnv.defineClass("Map", new MapNativeClass());
         globalEnv.defineClass("List", new ListNativeClass());

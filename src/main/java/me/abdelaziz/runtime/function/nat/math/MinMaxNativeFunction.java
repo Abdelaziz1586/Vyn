@@ -1,4 +1,4 @@
-package me.abdelaziz.runtime.function.nat.system;
+package me.abdelaziz.runtime.function.nat.math;
 
 import me.abdelaziz.runtime.Value;
 import me.abdelaziz.runtime.function.nat.NativeFunction;

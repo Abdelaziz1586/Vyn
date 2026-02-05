@@ -19,7 +19,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,19 +41,65 @@ public final class NativeBinder {
 
         if (javaInstance instanceof List) {
             final List<?> list = (List<?>) javaInstance;
-            final List<Value> values = new ArrayList<>(list.size());
-            for (final Object obj : list)
-                values.add(toValue(env, obj));
 
-            return new Value(values);
+            if (!env.has("List"))
+                throw new RuntimeException("List class not found in environment");
+
+            final Value listClassVal = env.get("List");
+            if (!(listClassVal.asJavaObject() instanceof VynClass))
+                throw new RuntimeException("List is not a valid class");
+
+            final VynClass listClass = (VynClass) listClassVal.asJavaObject();
+
+            final Environment instanceEnv = new Environment(listClass.getClosure());
+            final VynInstance instance = new VynInstance(instanceEnv);
+
+            instanceEnv.define("me", new Value(instance), true);
+
+            for (final Statement stmt : listClass.getBody())
+                stmt.execute(instanceEnv);
+
+            for (final Object obj : list) {
+                final Value convertedValue = toValue(env, obj);
+                if (instanceEnv.hasFunction("add"))
+                    instanceEnv.getFunction("add").call(instanceEnv, Collections.singletonList(convertedValue));
+            }
+
+            return new Value(instance);
         }
 
         if (javaInstance instanceof Map) {
             final Map<?, ?> map = (Map<?, ?>) javaInstance;
-            final Map<Object, Value> values = new LinkedHashMap<>(map.size());
-            for (final Map.Entry<?, ?> entry : map.entrySet())
-                values.put(entry.getKey(), toValue(env, entry.getValue()));
-            return new Value(values);
+
+            if (!env.has("Map"))
+                throw new RuntimeException("Map class not found in environment");
+
+            final Value mapClassVal = env.get("Map");
+            if (!(mapClassVal.asJavaObject() instanceof VynClass))
+                throw new RuntimeException("Map is not a valid class");
+
+            final VynClass mapClass = (VynClass) mapClassVal.asJavaObject();
+
+            final Environment instanceEnv = new Environment(mapClass.getClosure());
+            final VynInstance instance = new VynInstance(instanceEnv);
+
+            instanceEnv.define("me", new Value(instance), true);
+
+            for (final Statement stmt : mapClass.getBody())
+                stmt.execute(instanceEnv);
+
+            for (final Map.Entry<?, ?> entry : map.entrySet()) {
+                final Value keyValue = toValue(env, entry.getKey());
+                final Value valueValue = toValue(env, entry.getValue());
+                if (instanceEnv.hasFunction("put")) {
+                    final List<Value> args = new ArrayList<>();
+                    args.add(keyValue);
+                    args.add(valueValue);
+                    instanceEnv.getFunction("put").call(instanceEnv, args);
+                }
+            }
+
+            return new Value(instance);
         }
 
         if (javaInstance.getClass().isArray()) {
